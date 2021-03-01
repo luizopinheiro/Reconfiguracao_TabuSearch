@@ -1,8 +1,45 @@
-
 import numpy as np
 import win32com.client
 from datetime import datetime
 import random
+
+#esta função organiza o Fit em ordem crescente e consequentemente os Vizinhos e a lista de movimentos 
+#em ordem crescente de acordo com o Fit já ordenado 
+def SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS, lista_movimentos_separados):
+    
+    Fit_Sorted = sorted(FitVizS, reverse=False)
+    
+    VizS_Sorted = []
+    movimentos_Sorted = []
+    
+    for i in range (N_Malhas):
+        index = FitVizS.index(Fit_Sorted[i])
+        VizS_Sorted.append(VizS[index])
+        movimentos_Sorted.append(lista_movimentos_separados[index])
+    
+    return Fit_Sorted, VizS_Sorted, movimentos_Sorted
+        
+#esta função cria um novo S e uma nova lista tabu. ela analisa malha a malha se 
+#em nenhum momento o vizinho de melhor fit é tabu com o tabu do S anterior.
+#caso uma malha seja tabu, a função pega o movimento do próximo vizinho de melhor tabu (segundo, terceiro etc)
+#de forma a criar um NovoS totalmente renovado em relação ao anterior.
+def NovoS (Fit_Sorted, VizS_Sorted, movimentos_Sorted, N_Malhas, lista_tabu, N_Chaves_Malha):
+    
+    novo_tabu = []
+    novo_S = []
+    for i in range (len(movimentos_Sorted)):
+        for j in range (len(movimentos_Sorted[i])):
+            if (lista_tabu[i]!=movimentos_Sorted[j][i]):
+                novo_tabu.append(movimentos_Sorted[j][i])
+                break
+                
+    novo_S = [1]*sum(N_Chaves_Malha)
+    for i in novo_tabu:
+        novo_S[i] = 0
+        
+    
+    return novo_S, novo_tabu
+    
 
 def DecodificadorChaves (Individuo, NomesChaves):
     ChavesAbertas = []
@@ -21,6 +58,59 @@ def FitnessIndividuo(S, NomesChaves):
     objeto.solve_DSS_snapshot()       
     return objeto.get_line_losses()
 
+"""def Vizinhos (S, N_Malhas, N_Chaves_Malha):
+    
+    random.seed(datetime.now())
+    direcao = random.randint(0, 1)   #se direcao == 0, esquerda, se direcao == 1, direita
+    Vizinho = S
+    changes_list = []
+    Vizinhos2 = []
+    Vizinhos = []
+    Vizinhos3 =[]
+    
+    if (direcao==1):
+        for i in range(N_Malhas): #for dos vizinhos
+            inicio = 0
+            for j in range (N_Malhas): #for das malhas
+                index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
+                if (index == (inicio + N_Chaves_Malha[j]-1)):         
+                    Vizinho[index] = 1
+                    Vizinho[inicio] = 0
+                    changes_list.append(inicio)
+                else:
+                    Vizinho[index] = 1
+                    Vizinho[index+1] = 0
+                    changes_list.append(index+1)            
+                inicio = inicio + N_Chaves_Malha[j]
+                
+            Vizinhos2.append(np.array(Vizinho))
+            Vizinhos.append(Vizinho)
+    elif (direcao==0):
+        for i in range(N_Malhas): #for dos vizinhos
+            inicio = 0
+            for j in range (N_Malhas): #for das malhas
+                index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
+                if (index == inicio):         
+                    Vizinho[inicio + N_Chaves_Malha[j]-1] = 0
+                    Vizinho[inicio] = 1
+                    changes_list.append(inicio)
+                else:
+                    Vizinho[index] = 1
+                    Vizinho[index-1] = 0
+                    changes_list.append(index-1)            
+                inicio = inicio + N_Chaves_Malha[j]
+                
+            Vizinhos2.append(np.array(Vizinho))
+            Vizinhos.append(Vizinho)
+            
+    for i in range(len(Vizinhos2)):
+        Vizinhos3.append(Vizinhos2[i].tolist())
+    
+    changes_list_separated = np.array_split(changes_list, N_Malhas)
+                                      
+    return Vizinhos3, changes_list, changes_list_separated"""
+                
+            
 def Vizinhos (S, N_Malhas, N_Chaves_Malha):
     
     Vizinhos = []
@@ -28,7 +118,6 @@ def Vizinhos (S, N_Malhas, N_Chaves_Malha):
     changes_list = [] #lista dos índices que foram alterados (para lista tabu)
     Vizinhos2 = []
     Vizinhos3=[]
-
 
     #atualmente estou escolhendo um aleatorio em cada malha. no primeiro vizinho esse aleatorio vai pra 0 
     #e onde tá 0 vai pra 1
@@ -70,12 +159,14 @@ def Vizinhos (S, N_Malhas, N_Chaves_Malha):
              
         Vizinhos2.append(np.array(Vizinho))
         Vizinhos.append(Vizinho)
+    
         
     for i in range(len(Vizinhos2)):
         Vizinhos3.append(Vizinhos2[i].tolist())
-        
+    
+    changes_list_separated = np.array_split(changes_list, N_Malhas)
                                       
-    return Vizinhos3, changes_list
+    return Vizinhos3, changes_list, changes_list_separated
         
 
 class DSS():
@@ -180,7 +271,7 @@ if __name__ == "__main__":
     BestFit = FitS
     BestS = S
     Iter = 0
-    BTMax = 1
+    BTMax = 20
 
     print ("Fit inicial: ", FitS)
     
@@ -189,54 +280,57 @@ if __name__ == "__main__":
     T=10
     
     FitVizS = []
-    lista_tabu = []
+    lista_tabu = [-1]*sum(N_Chaves_Malha)
+    novo_tabu = [-1]*sum(N_Chaves_Malha)
     ChavesAbertasVizS = []
     
-    while (i <= 20):
-    #while (i-BestIter) <= BTMax:
+    #while (i <= 20):
+    while (i-BestIter) <= BTMax:
         i+=1
         print ("================NOVA ITERAÇÃO=================", i)
         print ("Partindo com Solução Corrente:", DecodificadorChaves(S, NomesChaves))
-        VizS, lista_movimentos = Vizinhos(S, N_Malhas, N_Chaves_Malha)
+        VizS, lista_movimentos, lista_movimentos_separados = Vizinhos(S, N_Malhas, N_Chaves_Malha)
         #lista_movimentos é um array que guarda todos os movimentos feitos em cada malha em cada vizinho
         #ou seja, lista_movimentos = [0, 1, 2, 4, 5, 6], por exemplo, 0 1 2 foram os movimentos para as malhas 1, 2 e 3 do primeiro vizinhi
         #enquanto 4, 5 6 foram movimentos das malhas 1 2 e 3 para o segundo vizinho etc
-
+        #lista_movimentos_separados gera os movimentos de cada vizinho em listas diferentes
+        
         #gera os fits dos vizinhos e a lista das chaves abertas em cada vizinho
         for j in range(len(VizS)):
             FitVizS.append(FitnessIndividuo(VizS[j], NomesChaves))
             ChavesAbertasVizS.append(DecodificadorChaves(VizS[j], NomesChaves))
-            
-        FitSorted = sorted(FitVizS, reverse=False) #organiza os Fit em ordem decrescente
-        index_melhorfit = FitVizS.index(FitSorted[0]) #obtém o index do maior fit no array original       
-        S = VizS[index_melhorfit] #nova solução corrente 
+                
+        lista_tabu = novo_tabu    
         
-        lista_tabu.clear() 
-        #obtém somente a lista de movimentos que foram realizados naquele indivíduo, em cada malha
-        for j in range(N_Malhas*index_melhorfit, N_Malhas*index_melhorfit + N_Malhas):
-            lista_tabu.append(lista_movimentos[j])
-            
+        fitvizorg, vizorg, moviorg = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS, lista_movimentos_separados)
+        
+        novo_S, novo_tabu = NovoS(fitvizorg, vizorg, moviorg, N_Malhas, lista_tabu, N_Chaves_Malha)
+        novo_fit_S = FitnessIndividuo(novo_S, NomesChaves)
+        
+        S = novo_S
+                            
         for j in range(len(VizS)):
             #print ("Vizinho: " ,VizS[j])
             print ("Vizinho: ", ChavesAbertasVizS[j])
             print ("Fit Vizinho: ", FitVizS[j])
             
-          
-        print ("S escolhido", DecodificadorChaves(S, NomesChaves))
-        #print ("Lista movimentos: ", lista_movimentos)
+        if (novo_fit_S < BestFit):
+            BestFit = novo_fit_S
+            BestS = novo_S
+            BestIter = i
         
-        if (FitVizS[index_melhorfit] < BestFit):
-            BestFit = FitVizS[index_melhorfit]
-            BestS = VizS[index_melhorfit]
+        print ("Novo S gerado:", DecodificadorChaves(novo_S, NomesChaves))
+        print ("Fit do Novo S:", novo_fit_S)
+        print ("Lista Tabu: ", novo_tabu)
         
-        print ("MELHOR S ATÉ O MOMENTO: ", DecodificadorChaves(BestS, NomesChaves))
-        print ("MELHOR FIT ATÉ O MOMENTO: ", BestFit)
-        print("lista_tabu", lista_tabu) 
+        print ("Melhor solução até o momento: ", DecodificadorChaves (BestS, NomesChaves))
+        print ("Melhor Fit até o momento: ", BestFit)
+        
         FitVizS.clear()
         VizS.clear()
-        FitSorted.clear()
         ChavesAbertasVizS.clear()
         lista_movimentos.clear()
+        lista_movimentos_separados.clear()
         
             
         
