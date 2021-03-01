@@ -1,13 +1,64 @@
+"""Especifique quantas vezes você quer que o programa rode:"""
+N_Vezes = 1
+"""Especifique o endereço do arquivo Opendss (dentro dos colchetes):"""
+address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\69_barras.dss]"
+
+"""Especifique o número de barras do sistema que você quer trabalhar (33 ou 69):"""
+N_Barras_Sistema = 69
+
+
 MelhoresFitsGerais = []
 MelhoresSGerais = []
+MinimasTensoesGerais = []
+MaximasTensoesGerais = []
 
-for i in range (10):
+k = 0
+#for i in range (N_Vezes):
+while k < N_Vezes:
     
     import numpy as np
     import win32com.client
     from datetime import datetime
     import random 
     
+    def OrganizaChaves_69bar ():
+        
+        ChavesMalha = [0,0,0,0,0]
+        N_Chaves_Malha = []
+        
+        ChavesMalha[0] = ["S4","S5","S6","S7","S8","S46","S47","S48","S49","S52","S53",
+                          "S54","S55","S56","S57","S58","S72"]
+        ChavesMalha[1] = ["S3","S4","S5","S6","S7","S8","S9","S10","S35","S36","S37",
+                          "S38","S39","S40","S41","S42","S69"]
+        ChavesMalha[2] = ["S11","S12","S13","S14","S43","S44","S45","S69","S71"]
+        ChavesMalha[3] = ["S13","S14","S15","S16","S17","S18","S19","S20","S70"]
+        ChavesMalha[4] = ["S9","S10","S11","S12","S13","S14","S15","S16","S17","S18",
+                          "S19","S20","S21","S22","S23","S24","S25","S26","S52","S53",
+                          "S54","S55","S56","S57","S58","S59","S60","S61","S62","S63",
+                          "S64","S73"]
+        
+        for i in range (len(ChavesMalha)):
+            for j in range (len(ChavesMalha)):
+                if (i!=j):
+                    ChavesComuns = list(set(ChavesMalha[i]) & set(ChavesMalha[j]))
+                    if ChavesComuns:
+                        for k in range (len(ChavesComuns)):
+                            Aleatorio = np.random.randint(2) 
+                            if (Aleatorio == 0): #se 0 a chave fica na malha i, se 1 fica na malha j
+                                ChavesMalha[j].remove(ChavesComuns[k])
+                            elif (Aleatorio == 1):
+                                ChavesMalha[i].remove(ChavesComuns[k])
+                        ChavesComuns.clear()
+        
+        for i in range (len(ChavesMalha)):
+            N_Chaves_Malha.append(len(ChavesMalha[i]))
+        
+        N_Malhas = len(ChavesMalha)
+        
+        NomesChaves = sum(ChavesMalha, [])
+        
+        
+        return NomesChaves, N_Chaves_Malha, N_Malhas
     
     #esta função organiza as chaves de cada malha sorteando aleatoriamente para cada malha
     #cada uma das chaves empatadas (que per)
@@ -66,15 +117,14 @@ for i in range (10):
     #em nenhum momento o vizinho de melhor fit é tabu com o tabu do S anterior.
     #caso uma malha seja tabu, a função pega o movimento do próximo vizinho de melhor fit (segundo, terceiro etc)
     #de forma a criar um NovoS totalmente renovado em relação ao anterior.
-    def NovoS (vizinhos, N_Chaves_Malha, lista_tabu_completa, movimentos_Sorted):
+    def NovoS (vizinhos, N_Chaves_Malha, lista_tabu_completa, movimentos_Sorted, fit_vizinhos):
         
-                 
-        lista_tabu_completa_transposta = np.transpose(lista_tabu_completa)
+        lista_tabu_completa_joined = [j for i in lista_tabu_completa for j in i]
         novo_tabu = []
         novo_S = []
         for i in range (len(movimentos_Sorted)):
             for j in range (len(movimentos_Sorted[i])):
-                if (movimentos_Sorted[j][i] not in lista_tabu_completa_transposta[j]):
+                if (lista_tabu_completa_joined.count(movimentos_Sorted[j][i])==0):
                     novo_tabu.append(movimentos_Sorted[j][i])
                     break
                     
@@ -83,10 +133,11 @@ for i in range (10):
             novo_S[i] = 0
         
         fit = FitnessIndividuo (novo_S, NomesChaves)
-
-        
-        return novo_S, novo_tabu, fit
-          
+        if (Radialidade()):
+            return novo_S, novo_tabu, fit
+        else:
+            return vizinhos[0], movimentos_Sorted[0], fit_vizinhos[0]
+            
     
     def DecodificadorChaves (Individuo, NomesChaves):
         ChavesAbertas = []
@@ -134,7 +185,7 @@ for i in range (10):
             Vizinho = [1]*len(S)
             for j in range (N_Malhas): #for das malhas  
                 #if (i==0): #primeiro vizinho gera o aleatorio e substitui
-                random.seed(datetime.now())
+                #random.seed(datetime.now())
                 x = random.randint(inicio, inicio + N_Chaves_Malha[j]-1)
                 #index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
                 if (Vizinho[x]==1):
@@ -183,10 +234,12 @@ for i in range (10):
         limite_inferior = tensao_especificada*0.93
         
         tensoes = objeto.get_tensoes_DSS()
+        min_tensao_pu = min(tensoes)/tensao_especificada
+        max_tensao_pu = max(tensoes)/tensao_especificada
         if (min(tensoes) < limite_inferior) or (max(tensoes) > limite_superior):
-            return 0 #se quebrar os limites, retorna 0
+            return 0, min_tensao_pu, max_tensao_pu #se quebrar os limites, retorna 0
         
-        return 1 #se nao quebrar os limites, retorna 1 
+        return 1, min_tensao_pu, max_tensao_pu #se nao quebrar os limites, retorna 1 
 
     def Radialidade ():
         if (objeto.num_isolated_loads_DSS() == 0) and (objeto.num_loops_DSS() == 0):
@@ -280,11 +333,11 @@ for i in range (10):
         # Criar um objeto da classe DSS
         # Inserir aqui o nome da pasta onde encontra-se o seu .dss
         # Caso haja espaços no endereço, colocar entre []
-        objeto = DSS(r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]")
+        objeto = DSS(address_opendss)
         objeto.compile_DSS()
         print (u"Versão do OpenDSS: " + objeto.versao_DSS() + "\n")
         
-        NomesChaves=["S2","S3","S4","S5","S6","S7","S33","S20","S19","S18",
+        """NomesChaves=["S2","S3","S4","S5","S6","S7","S33","S20","S19","S18",
                      "S22","S23","S24","S37","S28","S27","S26","S25",
                      "S8","S9","S10","S35","S21",
                      "S29","S30","S31","S32","S36","S17","S16","S15",
@@ -301,12 +354,14 @@ for i in range (10):
              1,1,1,0,1,1,1,1,
              1,1,1,0,1,
              1,1,1,1,0,1,1,1,
-             0,1,1,1,1]
+             0,1,1,1,1]"""
         
+        if (N_Barras_Sistema == 33):
+            NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_33bar()
+        elif (N_Barras_Sistema == 69):
+            NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_69bar()
         
-        """NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_33bar()
-        
-        S = GeraS(N_Chaves_Malha, N_Malhas)"""
+        S = GeraS(N_Chaves_Malha, N_Malhas)
         
        
         print ("N_Chaves_Malha", N_Chaves_Malha)
@@ -317,13 +372,13 @@ for i in range (10):
         BestFit = FitS
         BestS = S
         Iter = 0
-        BTMax = 30
+        BTMax = 40
     
         print ("Fit inicial: ", FitS)
         
         i = 0
         BestIter = 1
-        T = 4 #tamanho da lista tabu
+        T = 3 #tamanho da lista tabu
         
         FitVizS = []
         lista_tabu = [-1]*sum(N_Chaves_Malha)
@@ -334,6 +389,11 @@ for i in range (10):
         melhorvizinho = 0
         vizinhogerado = 0
         TodosS = []
+        
+
+        min_tensao = 0
+        max_tensao = 0
+        tensao = 0
         
         while (i-BestIter) <= BTMax:
             
@@ -358,12 +418,13 @@ for i in range (10):
 
                 
             fitorg, vizorg, moviorg = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS, lista_movimentos_separados)
-                
+            
             if (i>1):
-                S_gerado, movi_S_gerado, fit_S_gerado = NovoS(moviorg, N_Chaves_Malha, lista_tabu_completa, moviorg)
+                S_gerado, movi_S_gerado, fit_S_gerado = NovoS(vizorg, N_Chaves_Malha, lista_tabu_completa, moviorg, fitorg)
                 VizS.append(S_gerado)
                 lista_movimentos_separados.append(movi_S_gerado)
                 FitVizS.append(fit_S_gerado)
+                print ("S gerado: ", DecodificadorChaves(S_gerado, NomesChaves))
                 
             fitorg, vizorg, moviorg = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS, lista_movimentos_separados)
             
@@ -371,11 +432,28 @@ for i in range (10):
                 #print ("Vizinho: " ,VizS[j])
                 print ("Vizinho", j, DecodificadorChaves(vizorg[j], NomesChaves), "Fit:", fitorg[j])
         
-            S = vizorg[0]
-            fit_novo_S = fitorg[0]
-            novo_tabu = np.array(moviorg[0]).tolist()
+            #PARTE DA ESCOLHA DO NOVO S:
+            if (fitorg[0] < BestFit): #função de aspiração
+                S = vizorg[0]
+                fit_novo_S = fitorg[0]
+                novo_tabu = np.array(moviorg[0]).tolist()
+            else:
+                lista_tabu_completa_flat = [item for sublist in lista_tabu_completa for item in sublist]
+                for m in range (len(vizorg)):
+                    if (any(n in lista_tabu_completa_flat for n in moviorg[m]) == False):
+                        print ("O vizinho escolhido foi o", m)
+                        S = vizorg[m]
+                        fit_novo_S = fitorg[m]
+                        novo_tabu = np.array(moviorg[m]).tolist() 
+                        break
             
-            TodosS.append(S)
+                #print ("vizorg: ", vizorg)
+                #print ("fitorg: ", fitorg)
+                #print ("moviorg: ", moviorg)
+                #print ("lista_tabu_completa_flat: ", lista_tabu_completa_flat)
+                        
+            
+            
             
             if (BestFit > fit_novo_S):
                 BestFit =  fit_novo_S
@@ -383,7 +461,8 @@ for i in range (10):
                 BestS2 = S
                 BestIter = i
                 print ("Novos BestFit e BestS encontrados")
-                if (Limites_tensao(7309)):
+                status_tensao, min_tensao, max_tensao = Limites_tensao(7309)
+                if (status_tensao == 1):
                     print ("Tensao nos limites")
                     tensao = 1
                 else:
@@ -402,6 +481,10 @@ for i in range (10):
             
             print ("BestS: ", BestS, "BestFit:", BestFit)
             
+            if (N_Barras_Sistema == 33):
+                NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_33bar()
+            elif (N_Barras_Sistema == 69):
+                NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_69bar()
             
             VizS.clear()
             FitVizS.clear()
@@ -414,8 +497,7 @@ for i in range (10):
             moviorg.clear()
             
         
-        MelhoresFitsGerais.append(BestFit)
-        MelhoresSGerais.append(BestS)
+            
         print ("--------Resultado desta rodada-------- ")
         print ("BestIter: ", BestIter)
         print ("Melhor configuração: ", BestS, "Fit: ", BestFit)
@@ -427,27 +509,30 @@ for i in range (10):
             print ("Radialidade: OK")
         else:
             print ("Radialidade: erro")
-        #for i in range(len(S)):
-         #   objeto.switch_elemento(NomesChaves[i], S[i])
             
-        #objeto.solve_DSS_snapshot() 
-        
-        #for i in range(len(MelhoresS)):
+        if (tensao == 1 and radialidade == 1):
+            k+=1
+            MelhoresFitsGerais.append(BestFit)
+            MelhoresSGerais.append(BestS)
+            MinimasTensoesGerais.append(min_tensao)
+            MaximasTensoesGerais.append(max_tensao)
+            
+
     
-    #print ("numero de novo_S do melhor vizinho: ", melhorvizinho)
-    # ("numero de novo_S gerado: ", vizinhogerado)
     
 print ("================RESULTADO FINAL================")
 for i in range (len(MelhoresFitsGerais)):
-    print ("Config: ", MelhoresSGerais[i], 
-           "Fit: ", MelhoresFitsGerais[i])
+    print ("Config: ", MelhoresSGerais[i])
+    print ("Fit: ", round (MelhoresFitsGerais[i],3), "kW")
+    print ("Tensao minima: ", round (MinimasTensoesGerais[i],3), "pu")           
+    print ("Tensão máxima: ", round (MaximasTensoesGerais[i],3), "pu")
     
-"""print ("Melhor configuração: ", MelhoresFitsGerais)
-print ("Média de perdas: ", sum(MelhoresFitsGerais)/len(MelhoresFitsGerais))
-moda = statistics.mode(MelhoresFitsGerais)
-print ("Moda: ", moda)"""
+print ("Média de perdas para as configurações obtidas para sistema de ", 
+       N_Barras_Sistema, "barras: ", round(sum(MelhoresFitsGerais)/len(MelhoresFitsGerais),3))
         
             
     
     
     
+
+
