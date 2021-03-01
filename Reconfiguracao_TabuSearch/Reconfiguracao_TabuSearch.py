@@ -58,7 +58,7 @@ def FitnessIndividuo(S, NomesChaves):
     objeto.solve_DSS_snapshot()       
     return objeto.get_line_losses()
 
-"""def Vizinhos (S, N_Malhas, N_Chaves_Malha):
+def Vizinhos (S, N_Malhas, N_Chaves_Malha):
     
     random.seed(datetime.now())
     direcao = random.randint(0, 1)   #se direcao == 0, esquerda, se direcao == 1, direita
@@ -108,10 +108,10 @@ def FitnessIndividuo(S, NomesChaves):
     
     changes_list_separated = np.array_split(changes_list, N_Malhas)
                                       
-    return Vizinhos3, changes_list, changes_list_separated"""
+    return Vizinhos3, changes_list, changes_list_separated
                 
             
-def Vizinhos (S, N_Malhas, N_Chaves_Malha):
+"""def Vizinhos (S, N_Malhas, N_Chaves_Malha):
     
     Vizinhos = []
     inicio = 0
@@ -166,7 +166,7 @@ def Vizinhos (S, N_Malhas, N_Chaves_Malha):
     
     changes_list_separated = np.array_split(changes_list, N_Malhas)
                                       
-    return Vizinhos3, changes_list, changes_list_separated
+    return Vizinhos3, changes_list, changes_list_separated"""
         
 
 class DSS():
@@ -271,7 +271,7 @@ if __name__ == "__main__":
     BestFit = FitS
     BestS = S
     Iter = 0
-    BTMax = 20
+    BTMax = 10
 
     print ("Fit inicial: ", FitS)
     
