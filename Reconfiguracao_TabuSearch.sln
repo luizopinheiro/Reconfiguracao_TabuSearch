@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Reconfiguracao_TabuSearch", "Reconfiguracao_TabuSearch\Reconfiguracao_TabuSearch.pyproj", "{389A181E-19FA-4AE9-8B5B-8116AEA68B4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{389A181E-19FA-4AE9-8B5B-8116AEA68B4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{389A181E-19FA-4AE9-8B5B-8116AEA68B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {113AFB99-6A09-4A82-AB25-29420DFB0567}
+	EndGlobalSection
+EndGlobal
