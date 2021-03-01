@@ -114,24 +114,42 @@ for i in range (1):
         objeto.solve_DSS_snapshot()       
         return objeto.get_line_losses()
     
+
+    
     def Vizinhos (S, N_Malhas, N_Chaves_Malha):
         
-        random.seed(datetime.now())
-        direcao = random.randint(0, 1)   #se direcao == 0, esquerda, se direcao == 1, direita
-        Vizinho = S
-        changes_list = []
-        Vizinhos2 = []
         Vizinhos = []
-        Vizinhos3 =[]
+        inicio = 0
+        changes_list = [] #lista dos índices que foram alterados (para lista tabu)
+        Vizinhos2 = []
+        Vizinhos3=[]
         FitVizinhos3 = []
+    
+        #atualmente estou escolhendo um aleatorio em cada malha. no primeiro vizinho esse aleatorio vai pra 0 
+        #e onde tá 0 vai pra 1
+        #nos demais vizinhos vai andando com o 0 pra frente de onde estava no primeiro vizinho
         i = 0
-        changes_list_separated = []
-     
-        if (direcao==1):
-            while i < N_Malhas:
-            #for i in range(N_Malhas): #for dos vizinhos
-                inicio = 0
-                for j in range (N_Malhas): #for das malhas
+        while i < N_Malhas: #for dos vizinhos
+            if (i==0):
+                Vizinho = S
+            else:
+                Vizinho = Vizinhos[i-1]
+            inicio = 0
+    
+            for j in range (N_Malhas): #for das malhas  
+                if (i==0): #primeiro vizinho gera o aleatorio e substitui
+                    random.seed(datetime.now())
+                    x = random.randint(inicio, inicio + N_Chaves_Malha[j]-1)
+                    index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
+                    if (Vizinho[x]==1):
+                        Vizinho[x] = 0
+                        Vizinho[index] = 1
+                    
+                    changes_list.append(x)
+                    inicio = inicio + N_Chaves_Malha[j]
+                    
+                    
+                else: #demais vizinhos pega o vizinho anterior e só anda com o 0 pra frente
                     index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
                     if (index == (inicio + N_Chaves_Malha[j]-1)):         
                         Vizinho[index] = 1
@@ -141,58 +159,27 @@ for i in range (1):
                         Vizinho[index] = 1
                         Vizinho[index+1] = 0
                         changes_list.append(index+1)            
-                    inicio = inicio + N_Chaves_Malha[j]
-                
-                fit = FitnessIndividuo(Vizinho, NomesChaves)
-                if (Radialidade()):
-                    Vizinhos2.append(np.array(Vizinho))
-                    Vizinhos.append(Vizinho)
-                    FitVizinhos3.append(fit)
-                    Vizinhos3.append(Vizinhos2[i].tolist())
-                    i+=1
-                else:
-                    changes_list = changes_list[:len(changes_list)-N_Malhas]
-                                    
-        elif (direcao==0):
-            while i < N_Malhas:
-            #for i in range(N_Malhas): #for dos vizinhos
-                inicio = 0
-                for j in range (N_Malhas): #for das malhas
-                    index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
-                    if (index == inicio):         
-                        Vizinho[inicio + N_Chaves_Malha[j]-1] = 0
-                        Vizinho[inicio] = 1
-                        changes_list.append(inicio)
-                    else:
-                        Vizinho[index] = 1
-                        Vizinho[index-1] = 0
-                        changes_list.append(index-1)            
-                    inicio = inicio + N_Chaves_Malha[j]
                     
-                fit = FitnessIndividuo(Vizinho, NomesChaves)
-                if (Radialidade()):
-                    #print ("Vizinho: ", DecodificadorChaves(Vizinho,NomesChaves), "com fit: ", fit)
-                    Vizinhos2.append(np.array(Vizinho))
-                    Vizinhos.append(Vizinho)
-                    FitVizinhos3.append(fit)
-                    Vizinhos3.append(Vizinhos2[i].tolist())
-                    i+=1
-                else:
-                    changes_list = changes_list[:len(changes_list)-N_Malhas]
-    
-          
-        #changes_list_separated = np.array_split(changes_list, N_Malhas)
-        
-        """for i in range (N_Malhas):
-            fit = FitnessIndividuo(Vizinhos2[i].tolist(), NomesChaves)
+                    inicio = inicio + N_Chaves_Malha[j]
+            fit = FitnessIndividuo(Vizinho, NomesChaves)
             if (Radialidade()):
-                Vizinhos3.append(Vizinhos2[i].tolist())
+                Vizinhos2.append(np.array(Vizinho))
+                Vizinhos.append(Vizinho)
                 FitVizinhos3.append(fit)
+                Vizinhos3.append(Vizinhos2[i].tolist())
+                i+=1
             else:
-                changes_list_separated.pop(i)"""
+                changes_list = changes_list[:len(changes_list)-N_Malhas]
+                 
+            Vizinhos2.append(np.array(Vizinho))
+            Vizinhos.append(Vizinho)
+        
+            
+        for i in range(len(Vizinhos2)):
+            Vizinhos3.append(Vizinhos2[i].tolist())
         
         changes_list_separated = np.array_split(changes_list, N_Malhas)
-        
+                                          
         return Vizinhos3, FitVizinhos3, changes_list_separated
                     
     def GeraS(N_Chaves_Malha, N_Malhas): #gera um S aleatório
@@ -397,7 +384,7 @@ for i in range (1):
                 
             fitorg, vizorg, moviorg = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS, lista_movimentos_separados)
             
-            for j in range(len(VizS)):
+            for j in range(len(vizorg)):
                 #print ("Vizinho: " ,VizS[j])
                 print ("Vizinho", j, DecodificadorChaves(vizorg[j], NomesChaves), "Fit:", fitorg[j])
         
