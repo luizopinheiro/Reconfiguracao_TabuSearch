@@ -271,7 +271,7 @@ if __name__ == "__main__":
     BestFit = FitS
     BestS = S
     Iter = 0
-    BTMax = 10
+    BTMax = 20
 
     print ("Fit inicial: ", FitS)
     
@@ -283,6 +283,7 @@ if __name__ == "__main__":
     lista_tabu = [-1]*sum(N_Chaves_Malha)
     novo_tabu = [-1]*sum(N_Chaves_Malha)
     ChavesAbertasVizS = []
+    lista_tabu_completa = []
     
     #while (i <= 20):
     while (i-BestIter) <= BTMax:
@@ -300,11 +301,22 @@ if __name__ == "__main__":
             FitVizS.append(FitnessIndividuo(VizS[j], NomesChaves))
             ChavesAbertasVizS.append(DecodificadorChaves(VizS[j], NomesChaves))
                 
-        lista_tabu = novo_tabu    
+        lista_tabu = novo_tabu 
+        
+        if (len(lista_tabu_completa)==T):
+            lista_tabu_completa.pop(0)
+            lista_tabu_completa.append(lista_tabu)
+        else:
+            lista_tabu_completa.append(lista_tabu)
         
         fitvizorg, vizorg, moviorg = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS, lista_movimentos_separados)
         
-        novo_S, novo_tabu = NovoS(fitvizorg, vizorg, moviorg, N_Malhas, lista_tabu, N_Chaves_Malha)
+        if (fitvizorg[0] < BestFit): #função de aspiração
+            novo_S = vizorg[0]
+            novo_tabu = np.array(moviorg[0]).tolist()
+        else:
+            novo_S, novo_tabu = NovoS(fitvizorg, vizorg, moviorg, N_Malhas, lista_tabu, N_Chaves_Malha)
+        
         novo_fit_S = FitnessIndividuo(novo_S, NomesChaves)
         
         S = novo_S
