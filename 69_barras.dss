@@ -1,0 +1,241 @@
+clear
+Set DefaultBaseFrequency=60
+
+New object=circuit.ieee69 basekv=12.66 pu=1.00 MVAsc3=200000000 MVAsc1=210000000 Bus1=b1
+
+New Line.L1     Phases=3 Bus1=b1  Bus2=b2 r1=0.0005 x1=0.0012 normamps = 400
+New Line.L2     Phases=3 Bus1=b2  Bus2=b3 r1=0.0005   x1=0.0012 normamps = 400
+New Line.L3     Phases=3 Bus1=b3  Bus2=b4 r1=0.0015 x1=0.0036 normamps = 400
+New Line.L4     Phases=3 Bus1=b4  Bus2=b5 r1=0.0251 x1=0.0294 normamps = 400
+New Line.L5     Phases=3 Bus1=b5  Bus2=b6 r1=0.366   x1=0.1864  normamps = 400
+New Line.L6     Phases=3 Bus1=b6  Bus2=b7 r1=0.381 x1=0.1941 normamps = 400
+New Line.L7     Phases=3 Bus1=b7  Bus2=b8 r1=0.0922 x1=0.047 normamps = 400
+New Line.L8     Phases=3 Bus1=b8  Bus2=b9 r1=0.0493 x1=0.0251 normamps = 400
+New Line.L9     Phases=3 Bus1=b9  Bus2=b10 r1=0.819 x1=0.2707 normamps = 400
+New Line.L10     Phases=3 Bus1=b10  Bus2=b11 r1=0.1872 x1=0.0619 normamps = 200 
+New Line.L11     Phases=3 Bus1=b11  Bus2=b12 r1=0.7114 x1=0.2351 normamps = 200 
+New Line.L12     Phases=3 Bus1=b12  Bus2=b13 r1=1.03 x1=0.34  normamps = 200
+New Line.L13     Phases=3 Bus1=b13  Bus2=b14 r1=1.044 x1=0.345  normamps = 200
+New Line.L14     Phases=3 Bus1=b14  Bus2=b15 r1=1.058 x1=0.3496 normamps = 200
+New Line.L15     Phases=3 Bus1=b15  Bus2=b16 r1=0.1966 x1=0.065 normamps = 200
+New Line.L16     Phases=3 Bus1=b16  Bus2=b17 r1=0.3744 x1=0.1238 normamps = 200
+New Line.L17     Phases=3 Bus1=b17  Bus2=b18 r1=0.0047 x1=0.0016 normamps = 200
+New Line.L18     Phases=3 Bus1=b18  Bus2=b19 r1=0.3276 x1=0.1083 normamps = 200
+New Line.L19     Phases=3 Bus1=b19  Bus2=b20 r1=0.2106 x1=0.069 normamps = 200
+New Line.L20     Phases=3 Bus1=b20  Bus2=b21 r1=0.3416 x1=0.1129 normamps = 200
+New Line.L21     Phases=3 Bus1=b21  Bus2=b22 r1=0.014 x1=0.0046 normamps = 200
+New Line.L22     Phases=3 Bus1=b22  Bus2=b23 r1=0.1591 x1=0.0526 normamps = 200
+New Line.L23     Phases=3 Bus1=b23  Bus2=b24 r1=0.3463 x1=0.1145 normamps = 200
+New Line.L24     Phases=3 Bus1=b24  Bus2=b25 r1=0.7488 x1=0.2475 normamps = 200
+New Line.L25     Phases=3 Bus1=b25  Bus2=b26 r1=0.3089 x1=0.1021 normamps = 200
+New Line.L26     Phases=3 Bus1=b26  Bus2=b27 r1=0.1732 x1=0.0572 normamps = 200
+
+New Line.L27     Phases=3 Bus1=b3  Bus2=b28 r1=0.0044 x1=0.0108 normamps = 200
+New Line.L28     Phases=3 Bus1=b28  Bus2=b29 r1=0.064 x1=0.1565 normamps = 200
+New Line.L29     Phases=3 Bus1=b29  Bus2=b30 r1=0.3978 x1=0.1315 normamps = 200
+New Line.L30     Phases=3 Bus1=b30  Bus2=b31 r1=0.0702 x1=0.0232 normamps = 200
+New Line.L31     Phases=3 Bus1=b31  Bus2=b32 r1=0.351 x1=0.116 normamps = 200
+New Line.L32     Phases=3 Bus1=b32  Bus2=b33 r1=0.839 x1=0.2816 normamps = 200
+New Line.L33     Phases=3 Bus1=b33  Bus2=b34 r1=1.708 x1=0.5646 normamps = 200
+New Line.L34     Phases=3 Bus1=b34  Bus2=b35 r1=1.474 x1=0.4873 normamps = 200
+New Line.L35     Phases=3 Bus1=b3  Bus2=b36  r1=0.0044 x1=0.0108 normamps = 200
+New Line.L36     Phases=3 Bus1=b36  Bus2=b37 r1=0.064 x1=0.1565 normamps = 200
+New Line.L37     Phases=3 Bus1=b37  Bus2=b38 r1=0.1053 x1=0.123 normamps = 200
+
+New Line.L38     Phases=3 Bus1=b38  Bus2=b39 r1=0.0304 x1=0.0355  normamps = 200
+New Line.L39     Phases=3 Bus1=b39  Bus2=b40 r1=0.0018 x1=0.0021  normamps = 200
+New Line.L40     Phases=3 Bus1=b40  Bus2=b41 r1=0.7283 x1=0.8509  normamps = 200
+New Line.L41     Phases=3 Bus1=b41  Bus2=b42 r1=0.31 x1=0.3623  normamps = 200
+New Line.L42     Phases=3 Bus1=b42  Bus2=b43 r1=0.041 x1=0.0478  normamps = 200
+New Line.L43     Phases=3 Bus1=b43  Bus2=b44 r1=0.0092 x1=0.0116  normamps = 200
+New Line.L44     Phases=3 Bus1=b44  Bus2=b45 r1=0.1089 x1=0.1373  normamps = 200
+New Line.L45     Phases=3 Bus1=b45  Bus2=b46 r1=0.0009 x1=0.0012  normamps = 200
+New Line.L46     Phases=3 Bus1=b4    Bus2=b47 r1=0.0034 x1=0.0084 normamps = 300 
+New Line.L47     Phases=3 Bus1=b47  Bus2=b48 r1=0.0851 x1=0.2083 normamps = 300 
+
+New Line.L48     Phases=3 Bus1=b48  Bus2=b49 r1=0.2898 x1=0.7091 normamps = 300 
+New Line.L49     Phases=3 Bus1=b49  Bus2=b50 r1=0.0822 x1=0.2011 normamps = 300 
+New Line.L50     Phases=3 Bus1=b8    Bus2=b51 r1=0.0928 x1=0.0473  normamps = 200
+New Line.L51     Phases=3 Bus1=b51  Bus2=b52 r1=0.3319 x1=0.1114  normamps = 200
+New Line.L52     Phases=3 Bus1=b9    Bus2=b53 r1=0.174 x1=0.0886 normamps = 200 
+New Line.L53     Phases=3 Bus1=b53  Bus2=b54 r1=0.203 x1=0.1034  normamps = 200
+New Line.L54     Phases=3 Bus1=b54  Bus2=b55 r1=0.2842 x1=0.1447  normamps = 200
+New Line.L55     Phases=3 Bus1=b55  Bus2=b56 r1=0.2813 x1=0.1433  normamps = 200
+New Line.L56     Phases=3 Bus1=b56  Bus2=b57 r1=1.59     x1=0.5337 normamps = 200
+New Line.L57     Phases=3 Bus1=b57  Bus2=b58 r1=0.7837 x1=0.263  normamps = 200
+New Line.L58     Phases=3 Bus1=b58  Bus2=b59 r1=0.3042 x1=0.1006  normamps = 200
+New Line.L59     Phases=3 Bus1=b59  Bus2=b60 r1=0.3861 x1=0.1172  normamps = 200
+New Line.L60     Phases=3 Bus1=b60  Bus2=b61 r1=0.5075 x1=0.2585 normamps = 200
+New Line.L61     Phases=3 Bus1=b61  Bus2=b62 r1=0.0974 x1=0.0496 normamps = 200
+New Line.L62     Phases=3 Bus1=b62  Bus2=b63 r1=0.145 x1=0.0738 normamps = 200
+New Line.L63     Phases=3 Bus1=b63  Bus2=b64 r1=0.7105 x1=0.3619  normamps = 200
+New Line.L64     Phases=3 Bus1=b64  Bus2=b65 r1=1.041 x1=0.5302 normamps = 200
+New Line.L65     Phases=3 Bus1=b11  Bus2=b66 r1=0.2012 x1=0.0611  normamps = 200
+New Line.L66     Phases=3 Bus1=b66  Bus2=b67 r1=0.0047 x1=0.0014 normamps = 200
+New Line.L67     Phases=3 Bus1=b12  Bus2=b68 r1=0.7394 x1=0.2444 normamps = 200
+New Line.L68     Phases=3 Bus1=b68  Bus2=b69 r1=0.0047 x1=0.0016 normamps = 200
+
+New Line.L69     Phases=3 Bus1=b11  Bus2=b43 r1=0.5 x1=0.5 normamps = 200
+New Line.L70     Phases=3 Bus1=b13  Bus2=b21 r1=0.5 x1=0.5 normamps = 200
+New Line.L71     Phases=3 Bus1=b15  Bus2=b46 r1=1 x1=0.5 normamps = 200
+New Line.L72     Phases=3 Bus1=b50  Bus2=b59 r1=2 x1=1 normamps = 200
+New Line.L73     Phases=3 Bus1=b27  Bus2=b65 r1=1 x1=0.5 normamps = 200
+
+New Load.LoadB2      Bus1=b2 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB3      Bus1=b3 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 00
+New Load.LoadB4      Bus1=b4 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=00  kVAR= 00
+New Load.LoadB5      Bus1=b5 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=00  kVAR= 00
+New Load.LoadB6      Bus1=b6 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=2.6  kVAR= 2.2
+New Load.LoadB7      Bus1=b7 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=40.4  kVAR= 30
+New Load.LoadB8      Bus1=b8 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=75  kVAR= 54
+New Load.LoadB9      Bus1=b9 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=30  kVAR= 22
+New Load.LoadB10     Bus1=b10 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=28  kVAR= 19
+New Load.LoadB11      Bus1=b11 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=145  kVAR= 104
+New Load.LoadB12      Bus1=b12 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=145  kVAR= 104
+New Load.LoadB13      Bus1=b13 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=8  kVAR= 5
+New Load.LoadB14      Bus1=b14 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=8  kVAR= 5.5
+
+New Load.LoadB15      Bus1=b15 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB16      Bus1=b16 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=45.5  kVAR= 30
+New Load.LoadB17      Bus1=b17 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=60  kVAR= 35
+New Load.LoadB18      Bus1=b18 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=60  kVAR= 35
+New Load.LoadB19      Bus1=b19 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB20      Bus1=b20 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=1  kVAR= 0.6
+New Load.LoadB21      Bus1=b21 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=114  kVAR= 81
+New Load.LoadB22      Bus1=b22 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=5  kVAR= 3.5
+New Load.LoadB23      Bus1=b23 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB24      Bus1=b24 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=28  kVAR= 20
+New Load.LoadB25      Bus1=b25 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB26      Bus1=b26 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=14  kVAR= 10
+New Load.LoadB27      Bus1=b27 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=14  kVAR= 10
+
+New Load.LoadB28      Bus1=b28 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=26  kVAR= 18.6
+New Load.LoadB29      Bus1=b29 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=26  kVAR= 18.6
+New Load.LoadB30      Bus1=b30 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB31      Bus1=b31 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB32      Bus1=b32 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB33      Bus1=b33 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=14  kVAR= 10
+New Load.LoadB34      Bus1=b34 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=19.5  kVAR= 14
+New Load.LoadB35      Bus1=b35 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=6  kVAR= 4
+New Load.LoadB36      Bus1=b36 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=26  kVAR= 18.55
+New Load.LoadB37      Bus1=b37 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=26  kVAR= 18.55
+New Load.LoadB38      Bus1=b38 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+
+New Load.LoadB39      Bus1=b39 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=24  kVAR= 17
+New Load.LoadB40      Bus1=b40 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=24 kVAR= 17
+New Load.LoadB41      Bus1=b41 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=1.2  kVAR= 1
+New Load.LoadB42      Bus1=b42 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB43      Bus1=b43 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=6  kVAR= 4.3
+New Load.LoadB44      Bus1=b44 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB45      Bus1=b45 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=39.22  kVAR=26.3 
+New Load.LoadB46      Bus1=b46 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=39.22  kVAR= 26.3
+New Load.LoadB47      Bus1=b47 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB48      Bus1=b48 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=79  kVAR= 56.4
+
+New Load.LoadB49      Bus1=b49 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=384.7  kVAR= 274.5
+New Load.LoadB50      Bus1=b50 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=384.7  kVAR= 274.5
+New Load.LoadB51      Bus1=b51 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=40.5  kVAR= 28.3
+New Load.LoadB52      Bus1=b52 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=3.6  kVAR= 2.7
+New Load.LoadB53      Bus1=b53 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=4.35  kVAR= 3.5
+New Load.LoadB54      Bus1=b54 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=26.4  kVAR= 19
+New Load.LoadB55      Bus1=b55 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=24  kVAR= 17.2
+!New Load.LoadB56      Bus1=b56 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+!New Load.LoadB57      Bus1=b57 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+!New Load.LoadB58      Bus1=b58 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+
+New Load.LoadB59      Bus1=b59 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=100  kVAR= 72
+New Load.LoadB60      Bus1=b60 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB61      Bus1=b61 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=1244  kVAR= 888
+New Load.LoadB62      Bus1=b62 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=32  kVAR= 23
+New Load.LoadB63      Bus1=b63 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=0  kVAR= 0
+New Load.LoadB64      Bus1=b64 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=227  kVAR= 162
+New Load.LoadB65      Bus1=b65 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=59  kVAR= 42
+New Load.LoadB66      Bus1=b66 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=18  kVAR= 13
+New Load.LoadB67      Bus1=b67 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=18  kVAR= 13
+New Load.LoadB68      Bus1=b68 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=28  kVAR= 20
+New Load.LoadB69      Bus1=b69 Phases=3 Conn=Delta Model=1 Vmaxpu=1.1 Vminpu=0.9 kV= 12.66 kW=28  kVAR= 20
+
+New swtcontrol.S1 SwitchedObj=Line.L1 action=close
+New swtcontrol.S2 SwitchedObj=Line.L2 action=close
+New swtcontrol.S3 SwitchedObj=Line.L3 action=close
+New swtcontrol.S4 SwitchedObj=Line.L4 action=close
+New swtcontrol.S5 SwitchedObj=Line.L5 action=close
+New swtcontrol.S6 SwitchedObj=Line.L6 action=close
+New swtcontrol.S7 SwitchedObj=Line.L7 action=close
+New swtcontrol.S8 SwitchedObj=Line.L8 action=close
+New swtcontrol.S9 SwitchedObj=Line.L9 action=close
+New swtcontrol.S10 SwitchedObj=Line.L10 action=close
+New swtcontrol.S11 SwitchedObj=Line.L11 action=close
+New swtcontrol.S12 SwitchedObj=Line.L12 action=close
+New swtcontrol.S13 SwitchedObj=Line.L13 action=close
+New swtcontrol.S14 SwitchedObj=Line.L14 action=close
+New swtcontrol.S15 SwitchedObj=Line.L15 action=close
+New swtcontrol.S16 SwitchedObj=Line.L16 action=close
+New swtcontrol.S17 SwitchedObj=Line.L17 action=close
+New swtcontrol.S18 SwitchedObj=Line.L18 action=close
+New swtcontrol.S19 SwitchedObj=Line.L19 action=close
+New swtcontrol.S20 SwitchedObj=Line.L20 action=close
+New swtcontrol.S21 SwitchedObj=Line.L21 action=close
+New swtcontrol.S22 SwitchedObj=Line.L22 action=close
+New swtcontrol.S23 SwitchedObj=Line.L23 action=close
+New swtcontrol.S24 SwitchedObj=Line.L24 action=close
+New swtcontrol.S25 SwitchedObj=Line.L25 action=close
+New swtcontrol.S26 SwitchedObj=Line.L26 action=close
+New swtcontrol.S27 SwitchedObj=Line.L27 action=close
+New swtcontrol.S28 SwitchedObj=Line.L28 action=close
+New swtcontrol.S29 SwitchedObj=Line.L29 action=close
+New swtcontrol.S30 SwitchedObj=Line.L30 action=close
+New swtcontrol.S31 SwitchedObj=Line.L31 action=close
+New swtcontrol.S32 SwitchedObj=Line.L32 action=close
+New swtcontrol.S33 SwitchedObj=Line.L33 action=close
+New swtcontrol.S34 SwitchedObj=Line.L34 action=close
+New swtcontrol.S35 SwitchedObj=Line.L35 action=close
+New swtcontrol.S36 SwitchedObj=Line.L36 action=close
+New swtcontrol.S37 SwitchedObj=Line.L37 action=close
+New swtcontrol.S38 SwitchedObj=Line.L38 action=close
+New swtcontrol.S39 SwitchedObj=Line.L39 action=close
+New swtcontrol.S40 SwitchedObj=Line.L40 action=close
+New swtcontrol.S41 SwitchedObj=Line.L41 action=close
+New swtcontrol.S42 SwitchedObj=Line.L42 action=close
+New swtcontrol.S43 SwitchedObj=Line.L43 action=close
+New swtcontrol.S44 SwitchedObj=Line.L44 action=close
+New swtcontrol.S45 SwitchedObj=Line.L45 action=close
+New swtcontrol.S46 SwitchedObj=Line.L46 action=close
+New swtcontrol.S47 SwitchedObj=Line.L47 action=close
+New swtcontrol.S48 SwitchedObj=Line.L48 action=close
+New swtcontrol.S49 SwitchedObj=Line.L49 action=close
+New swtcontrol.S50 SwitchedObj=Line.L50 action=close
+New swtcontrol.S51 SwitchedObj=Line.L51 action=close
+New swtcontrol.S52 SwitchedObj=Line.L52 action=close
+New swtcontrol.S53 SwitchedObj=Line.L53 action=close
+New swtcontrol.S54 SwitchedObj=Line.L54 action=close
+New swtcontrol.S55 SwitchedObj=Line.L55 action=close
+New swtcontrol.S56 SwitchedObj=Line.L56 action=close
+New swtcontrol.S57 SwitchedObj=Line.L57 action=close
+New swtcontrol.S58 SwitchedObj=Line.L58 action=close
+New swtcontrol.S59 SwitchedObj=Line.L59 action=close
+New swtcontrol.S60 SwitchedObj=Line.L60 action=close
+New swtcontrol.S61 SwitchedObj=Line.L61 action=close
+New swtcontrol.S62 SwitchedObj=Line.L62 action=close
+New swtcontrol.S63 SwitchedObj=Line.L63 action=close
+New swtcontrol.S64 SwitchedObj=Line.L64 action=close
+New swtcontrol.S65 SwitchedObj=Line.L65 action=close
+New swtcontrol.S66 SwitchedObj=Line.L66 action=close
+New swtcontrol.S67 SwitchedObj=Line.L67 action=close
+New swtcontrol.S68 SwitchedObj=Line.L68 action=close
+
+New swtcontrol.S69 SwitchedObj=Line.L69 action=close
+New swtcontrol.S70 SwitchedObj=Line.L70 action=close
+New swtcontrol.S71 SwitchedObj=Line.L71 action=close
+New swtcontrol.S72 SwitchedObj=Line.L72 action=close
+New swtcontrol.S73 SwitchedObj=Line.L73 action=close
+
+
+!solve
+!show losses
+!show unserved
+
+
+
+
+
