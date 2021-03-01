@@ -1,7 +1,7 @@
 MelhoresFitsGerais = []
 MelhoresSGerais = []
 
-for i in range (1):
+for i in range (10):
     
     import numpy as np
     import win32com.client
@@ -130,37 +130,20 @@ for i in range (1):
         #nos demais vizinhos vai andando com o 0 pra frente de onde estava no primeiro vizinho
         i = 0
         while i < N_Malhas: #for dos vizinhos
-            if (i==0):
-                Vizinho = S
-            else:
-                Vizinho = Vizinhos[i-1]
             inicio = 0
-    
+            Vizinho = [1]*len(S)
             for j in range (N_Malhas): #for das malhas  
-                if (i==0): #primeiro vizinho gera o aleatorio e substitui
-                    random.seed(datetime.now())
-                    x = random.randint(inicio, inicio + N_Chaves_Malha[j]-1)
-                    index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
-                    if (Vizinho[x]==1):
-                        Vizinho[x] = 0
-                        Vizinho[index] = 1
+                #if (i==0): #primeiro vizinho gera o aleatorio e substitui
+                random.seed(datetime.now())
+                x = random.randint(inicio, inicio + N_Chaves_Malha[j]-1)
+                #index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
+                if (Vizinho[x]==1):
+                    Vizinho[x] = 0
+                    #Vizinho[index] = 1
+                changes_list.append(x)
+                inicio = inicio + N_Chaves_Malha[j]
                     
-                    changes_list.append(x)
-                    inicio = inicio + N_Chaves_Malha[j]
                     
-                    
-                else: #demais vizinhos pega o vizinho anterior e só anda com o 0 pra frente
-                    index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
-                    if (index == (inicio + N_Chaves_Malha[j]-1)):         
-                        Vizinho[index] = 1
-                        Vizinho[inicio] = 0
-                        changes_list.append(inicio)
-                    else:
-                        Vizinho[index] = 1
-                        Vizinho[index+1] = 0
-                        changes_list.append(index+1)            
-                    
-                    inicio = inicio + N_Chaves_Malha[j]
             fit = FitnessIndividuo(Vizinho, NomesChaves)
             if (Radialidade()):
                 Vizinhos2.append(np.array(Vizinho))
@@ -171,12 +154,12 @@ for i in range (1):
             else:
                 changes_list = changes_list[:len(changes_list)-N_Malhas]
                  
-            Vizinhos2.append(np.array(Vizinho))
-            Vizinhos.append(Vizinho)
+            #Vizinhos2.append(np.array(Vizinho))
+            #Vizinhos.append(Vizinho)
         
             
-        for i in range(len(Vizinhos2)):
-            Vizinhos3.append(Vizinhos2[i].tolist())
+        #for i in range(len(Vizinhos2)):
+        #    Vizinhos3.append(Vizinhos2[i].tolist())
         
         changes_list_separated = np.array_split(changes_list, N_Malhas)
                                           
@@ -433,7 +416,7 @@ for i in range (1):
         
         MelhoresFitsGerais.append(BestFit)
         MelhoresSGerais.append(BestS)
-        print ("Resultado desta rodada======== ")
+        print ("--------Resultado desta rodada-------- ")
         print ("BestIter: ", BestIter)
         print ("Melhor configuração: ", BestS, "Fit: ", BestFit)
         if (tensao==1):
