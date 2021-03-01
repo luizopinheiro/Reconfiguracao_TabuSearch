@@ -2,6 +2,9 @@ import numpy as np
 import win32com.client
 from datetime import datetime
 import random
+import time 
+
+start_time = time.time()
 
 #esta função organiza o Fit em ordem crescente e consequentemente os Vizinhos e a lista de movimentos 
 #em ordem crescente de acordo com o Fit já ordenado 
@@ -21,25 +24,34 @@ def SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS, lista_movimentos_s
         
 #esta função cria um novo S e uma nova lista tabu. ela analisa malha a malha se 
 #em nenhum momento o vizinho de melhor fit é tabu com o tabu do S anterior.
-#caso uma malha seja tabu, a função pega o movimento do próximo vizinho de melhor tabu (segundo, terceiro etc)
+#caso uma malha seja tabu, a função pega o movimento do próximo vizinho de melhor fit (segundo, terceiro etc)
 #de forma a criar um NovoS totalmente renovado em relação ao anterior.
-def NovoS (Fit_Sorted, VizS_Sorted, movimentos_Sorted, N_Malhas, lista_tabu, N_Chaves_Malha):
+def NovoS (Fit_Sorted, VizS_Sorted, movimentos_Sorted, N_Malhas, lista_tabu, N_Chaves_Malha, lista_tabu_completa):
     
+    
+    lista_tabu_completa_transposta = np.transpose(lista_tabu_completa)
     novo_tabu = []
     novo_S = []
     for i in range (len(movimentos_Sorted)):
         for j in range (len(movimentos_Sorted[i])):
-            if (lista_tabu[i]!=movimentos_Sorted[j][i]):
+            if (movimentos_Sorted[j][i] not in lista_tabu_completa_transposta[j]):
                 novo_tabu.append(movimentos_Sorted[j][i])
                 break
                 
     novo_S = [1]*sum(N_Chaves_Malha)
     for i in novo_tabu:
         novo_S[i] = 0
-        
     
-    return novo_S, novo_tabu
+    fit_novo_S = FitnessIndividuo(novo_S, NomesChaves)
     
+    if (fit_novo_S < Fit_Sorted[0]):
+        sinalizador_novo_S = True
+        print ("USEIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
+        return novo_S, novo_tabu, sinalizador_novo_S
+    else:
+        sinalizador_novo_S = False
+        return VizS_Sorted[0], movimentos_Sorted[0], sinalizador_novo_S
+      
 
 def DecodificadorChaves (Individuo, NomesChaves):
     ChavesAbertas = []
@@ -111,64 +123,6 @@ def Vizinhos (S, N_Malhas, N_Chaves_Malha):
     return Vizinhos3, changes_list, changes_list_separated
                 
             
-"""def Vizinhos (S, N_Malhas, N_Chaves_Malha):
-    
-    Vizinhos = []
-    inicio = 0
-    changes_list = [] #lista dos índices que foram alterados (para lista tabu)
-    Vizinhos2 = []
-    Vizinhos3=[]
-
-    #atualmente estou escolhendo um aleatorio em cada malha. no primeiro vizinho esse aleatorio vai pra 0 
-    #e onde tá 0 vai pra 1
-    #nos demais vizinhos vai andando com o 0 pra frente de onde estava no primeiro vizinho
-    i = 0
-    for i in range(N_Malhas): #for dos vizinhos
-        if (i==0):
-            Vizinho = S
-        else:
-            Vizinho = Vizinhos[i-1]
-        inicio = 0
-
-        for j in range (N_Malhas): #for das malhas  
-            if (i==0): #primeiro vizinho gera o aleatorio e substitui
-                random.seed(datetime.now())
-                x = random.randint(inicio, inicio + N_Chaves_Malha[j]-1)
-                index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
-                if (Vizinho[x]==1):
-                    Vizinho[x] = 0
-                    Vizinho[index] = 1
-                
-                changes_list.append(x)
-                inicio = inicio + N_Chaves_Malha[j]
-                
-                
-            else: #demais vizinhos pega o vizinho anterior e só anda com o 0 pra frente
-                index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
-                if (index == (inicio + N_Chaves_Malha[j]-1)):         
-                    Vizinho[index] = 1
-                    Vizinho[inicio] = 0
-                    changes_list.append(inicio)
-                else:
-                    Vizinho[index] = 1
-                    Vizinho[index+1] = 0
-                    changes_list.append(index+1)            
-                
-                inicio = inicio + N_Chaves_Malha[j]
-
-             
-        Vizinhos2.append(np.array(Vizinho))
-        Vizinhos.append(Vizinho)
-    
-        
-    for i in range(len(Vizinhos2)):
-        Vizinhos3.append(Vizinhos2[i].tolist())
-    
-    changes_list_separated = np.array_split(changes_list, N_Malhas)
-                                      
-    return Vizinhos3, changes_list, changes_list_separated"""
-        
-
 class DSS():
 
     def __init__(self, end_modelo_DSS):
@@ -277,14 +231,14 @@ if __name__ == "__main__":
     
     i = 0
     BestIter = 1
-    T=10
+    T = 4 #tamanho da lista tabu
     
     FitVizS = []
     lista_tabu = [-1]*sum(N_Chaves_Malha)
     novo_tabu = [-1]*sum(N_Chaves_Malha)
     ChavesAbertasVizS = []
     lista_tabu_completa = []
-    
+    contador_novo_S = 0
     #while (i <= 20):
     while (i-BestIter) <= BTMax:
         i+=1
@@ -300,23 +254,28 @@ if __name__ == "__main__":
         for j in range(len(VizS)):
             FitVizS.append(FitnessIndividuo(VizS[j], NomesChaves))
             ChavesAbertasVizS.append(DecodificadorChaves(VizS[j], NomesChaves))
-                
-        lista_tabu = novo_tabu 
+        
+        
+        lista_tabu = novo_tabu    
         
         if (len(lista_tabu_completa)==T):
             lista_tabu_completa.pop(0)
             lista_tabu_completa.append(lista_tabu)
         else:
             lista_tabu_completa.append(lista_tabu)
+            
         
         fitvizorg, vizorg, moviorg = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS, lista_movimentos_separados)
+        
         
         if (fitvizorg[0] < BestFit): #função de aspiração
             novo_S = vizorg[0]
             novo_tabu = np.array(moviorg[0]).tolist()
         else:
-            novo_S, novo_tabu = NovoS(fitvizorg, vizorg, moviorg, N_Malhas, lista_tabu, N_Chaves_Malha)
-        
+            novo_S, novo_tabu, usou_novo_S = NovoS(fitvizorg, vizorg, moviorg, N_Malhas, lista_tabu, N_Chaves_Malha, lista_tabu_completa)
+            if (usou_novo_S == True):
+                contador_novo_S+=1
+                
         novo_fit_S = FitnessIndividuo(novo_S, NomesChaves)
         
         S = novo_S
@@ -343,16 +302,10 @@ if __name__ == "__main__":
         ChavesAbertasVizS.clear()
         lista_movimentos.clear()
         lista_movimentos_separados.clear()
-        
-            
-        
-        
-
     
-
-
-
-
-
+    print(contador_novo_S)
+    elapsed_time = time.time() - start_time
+    print (elapsed_time)        
+    
     
     
