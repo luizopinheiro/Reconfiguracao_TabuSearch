@@ -1,19 +1,23 @@
 """Especifique quantas vezes você quer que o programa rode:"""
-N_Vezes = 1
+N_Vezes = 50
 """Especifique o endereço do arquivo Opendss (dentro dos colchetes):"""
-address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\69_barras.dss]"
+address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
 
 """Especifique o número de barras do sistema que você quer trabalhar (33 ou 69):"""
-N_Barras_Sistema = 69
+N_Barras_Sistema = 33
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
-BTMax = 30
+BTMax = 60
+
+"Especifique o tamanho da Lista Tabu"
+T = 3
 
 MelhoresFitsGerais = []
 MelhoresSGerais = []
 MinimasTensoesGerais = []
 MaximasTensoesGerais = []
 
+solucoesotimas = 0
 k = 0
 for i in range (N_Vezes):
 #while k < N_Vezes:
@@ -27,25 +31,25 @@ for i in range (N_Vezes):
     def Ajuste_SistemaNBarras (N_Barras):
         
         if (N_Barras == 69):
-            ChavesMalha = [0,0,0,0,0]
-            ChavesMalha[0] = ["S4","S5","S6","S7","S8","S46","S47","S48","S49","S52","S53",
+            NomesTodasChaves = [0,0,0,0,0]
+            NomesTodasChaves[0] = ["S4","S5","S6","S7","S8","S46","S47","S48","S49","S52","S53",
                           "S54","S55","S56","S57","S58","S72"]
-            ChavesMalha[1] = ["S3","S4","S5","S6","S7","S8","S9","S10","S35","S36","S37",
+            NomesTodasChaves[1] = ["S3","S4","S5","S6","S7","S8","S9","S10","S35","S36","S37",
                           "S38","S39","S40","S41","S42","S69"]
-            ChavesMalha[2] = ["S11","S12","S13","S14","S43","S44","S45","S69","S71"]
-            ChavesMalha[3] = ["S13","S14","S15","S16","S17","S18","S19","S20","S70"]
-            ChavesMalha[4] = ["S9","S10","S11","S12","S21","S22","S23","S24","S25","S26","S52","S53",
+            NomesTodasChaves[2] = ["S11","S12","S13","S14","S43","S44","S45","S69","S71"]
+            NomesTodasChaves[3] = ["S13","S14","S15","S16","S17","S18","S19","S20","S70"]
+            NomesTodasChaves[4] = ["S9","S10","S11","S12","S21","S22","S23","S24","S25","S26","S52","S53",
                       "S54","S55","S56","S57","S58","S59","S60","S61","S62","S63",
-                      "S64","S73"]
-            return ChavesMalha
+                      "S64","S73","S70"]
+            return NomesTodasChaves
         elif (N_Barras == 33):
-            ChavesMalha = [0,0,0,0,0]
-            ChavesMalha[0] = ["S2", "S3","S4","S5","S6","S7","S33","S20","S19","S18"]
-            ChavesMalha[1] = ["S22","S23","S24","S37","S28","S27","S26","S25","S5","S4","S3"]
-            ChavesMalha[2] = ["S33","S8","S9","S10","S11","S35","S21"]
-            ChavesMalha[3] = ["S25","S26","S27","S28","S29","S30","S31","S32","S36","S17","S16","S15","S34","S8","S7","S6"]
-            ChavesMalha[4] = ["S34","S14","S13","S12","S11","S10","S9"]
-            return ChavesMalha
+            NomesTodasChaves = [0,0,0,0,0]
+            NomesTodasChaves[0] = ["S2", "S3","S4","S5","S6","S7","S33","S20","S19","S18"]
+            NomesTodasChaves[1] = ["S22","S23","S24","S37","S28","S27","S26","S25","S5","S4","S3"]
+            NomesTodasChaves[2] = ["S33","S8","S9","S10","S11","S35","S21"]
+            NomesTodasChaves[3] = ["S25","S26","S27","S28","S29","S30","S31","S32","S36","S17","S16","S15","S34","S8","S7","S6"]
+            NomesTodasChaves[4] = ["S34","S14","S13","S12","S11","S10","S9"]
+            return NomesTodasChaves
             
     
     #esta função roda o sistema com todas as chaves fechadas e então seleciona as chaves com
@@ -53,7 +57,7 @@ for i in range (N_Vezes):
     #a chave de menor fluxo de duas malhas; caso afirmativo, a chave é selecionada para uma
     #malha e na outra malha é selecionada a chave que tem menor fluxo que não seja em comum com
     #a primeira malha
-    def S_inicial(NomesChaves):
+    def S_inicial(NomesTodasChaves): 
         
         objeto.solve_DSS_snapshot()       
         potencias_ativas_trifasicas = []
@@ -61,10 +65,10 @@ for i in range (N_Vezes):
         
         #essa parte obtém o fluxo de cada uma das linhas e armazena no vetor potencias_ativas_trifasicas
         #é válido comentar que esse vetor corresponde com o NomesChaves
-        for i in range (len(NomesChaves)): #for de cada uma das malhas
+        for i in range (len(NomesTodasChaves)): #for de cada uma das malhas
             potencias_malha_aux = []
-            for j in range (len(NomesChaves[i])): #for das chaves dentro de cada malha
-                num_linha = int(NomesChaves[i][j][1:]) #pega o numero da linha a que se refere
+            for j in range (len(NomesTodasChaves[i])): #for das chaves dentro de cada malha
+                num_linha = int(NomesTodasChaves[i][j][1:]) #pega o numero da linha a que se refere
                 objeto.ativa_elemento("Line.L"+str(num_linha)) #ativa a determinada linha
                 potencias = (objeto.get_potencias_elemento()) #pega todas as potencias da linha
                 potencias_malha_aux.append(abs(potencias[0] + potencias[2] + potencias[4])) #soma somente as potências ativas entrando na linha
@@ -75,21 +79,21 @@ for i in range (N_Vezes):
             potencias_sorted = sorted(potencias_ativas_trifasicas[i], reverse=False) #ordena os fluxos de potência de forma crescente para uma determinada malha
             menor_fluxo_chave_malha = potencias_sorted[0]
             index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[i].index(menor_fluxo_chave_malha) #obtém o index do menor fluxo no vetor original potencias_ativas_trifasicas
-            chave = NomesChaves[i][index_menor_fluxo_chave_malha] #obtém a chave no vetor NomesChaves
+            chave = NomesTodasChaves[i][index_menor_fluxo_chave_malha] #obtém a chave no vetor NomesTodasChaves
             
             if (chave in S): #se a chave já tiver sido escolhida 
                 index_malhacomum = S.index(chave) #descobre a malha que a chave selecionada está em comum
-                ChavesComuns = [value for value in NomesChaves[i] if value in NomesChaves[index_malhacomum]] #obtém as chaves em comum entre a malha I e a malha da chave em comum
-                ChavesNaoComunsMalhai = [x for x in NomesChaves[i] if x not in ChavesComuns] #obtém as chaves que não são comuns entre a malha I e a malha da chave em comum
+                ChavesComuns = [value for value in NomesTodasChaves[i] if value in NomesTodasChaves[index_malhacomum]] #obtém as chaves em comum entre a malha I e a malha da chave em comum
+                ChavesNaoComunsMalhai = [x for x in NomesTodasChaves[i] if x not in ChavesComuns] #obtém as chaves que não são comuns entre a malha I e a malha da chave em comum
                 potencias_aux = []
                 for j in range (len(ChavesNaoComunsMalhai)): 
-                    index_aux = NomesChaves[i].index(ChavesNaoComunsMalhai[j]) #encontra o index das chaves não comuns dentro do vetor NomesChaves
+                    index_aux = NomesTodasChaves[i].index(ChavesNaoComunsMalhai[j]) #encontra o index das chaves não comuns dentro do vetor NomesChaves
                     potencias_aux.append(potencias_ativas_trifasicas[i][index_aux]) #adiciona ao vetor potencias_aux os fluxos das chaves não comuns
                     potencias_aux_sorted = sorted(potencias_aux, reverse=False) #ordena as potencias em ordem crescente
                     
                 menor_fluxo_chave_malha = potencias_aux_sorted[0] #pega o menor fluxo entre as chaves não comuns
                 index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[i].index(menor_fluxo_chave_malha)
-                chave = NomesChaves[i][index_menor_fluxo_chave_malha] #obtém no vetor NomesChaves a chave de menor fluxo
+                chave = NomesTodasChaves[i][index_menor_fluxo_chave_malha] #obtém no vetor NomesTodasChaves a chave de menor fluxo
             
             S.append(chave)
         
@@ -105,11 +109,10 @@ for i in range (N_Vezes):
     #O N_Chaves_Malha diz a quantidade de chaves da malha 1, 2, 3 etc.
     #n N_Malhas é somente o número de malhas do sistema
     def OrganizaChaves (NomesTodasChaves):
-        
-        NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves) #extremamente necessário usar o deepcopy para fazer uma cópia nesse caso pois
-        #se não usar o deep ele só irá fazer a cópia da primeira "camada" da lista enquanto as listas dentro da lista continuarão sendo
-        #apenas referenciadas
+    
         N_Chaves_Malha = []
+        
+        NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves)
         
         for i in range (len(NomesTodasChaves_aux)):
             for j in range (len(NomesTodasChaves_aux)):
@@ -124,25 +127,27 @@ for i in range (N_Vezes):
                                 NomesTodasChaves_aux[i].remove(ChavesComuns[k])
                         ChavesComuns.clear()
         
-        
-        
         for i in range (len(NomesTodasChaves_aux)):
             N_Chaves_Malha.append(len(NomesTodasChaves_aux[i]))
         
         N_Malhas = len(NomesTodasChaves_aux)
         
-        NomesChaves = sum(NomesTodasChaves_aux, [])
         
-        return NomesChaves, N_Chaves_Malha, N_Malhas
+        NomesChaves_aux = sum(NomesTodasChaves_aux, [])
+        
+        
+        return NomesChaves_aux, N_Chaves_Malha, N_Malhas
     
     #esta função organiza as chaves levando em consideração uma solução S.
     #desta maneira as malhas/chaves são reorganizadas obrigando cada chave aberta de S a pertencer a apenas uma malha
     #desta maneira, após a reorganização cada malha terá uma chave aberta (um 0)
     def OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch):
-    
+
         #print ("NomesTodasChaves", NomesTodasChaves)
         
         N_Chaves_Malha = []
+    
+        #soma = len(NomesTodasChaves[0]) + len(NomesTodasChaves[1])+len(NomesTodasChaves[2])+len(NomesTodasChaves[3]) + len(NomesTodasChaves[4])
         
         NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves)
     
@@ -151,7 +156,7 @@ for i in range (N_Vezes):
                 if (i!=j):
                     if S_ch[i] in NomesTodasChaves_aux[j]:
                         NomesTodasChaves_aux[j].remove(S_ch[i])
-                
+    
         
         #lembrando que ChavesMalha nessa função é o array com todas as chaves de todas as malhas (incluindo as repetidas)
         for i in range (len(NomesTodasChaves_aux)):
@@ -166,16 +171,17 @@ for i in range (N_Vezes):
                                 NomesTodasChaves_aux[j].remove(ChavesComuns[k])
                             elif (Aleatorio == 1):
                                 NomesTodasChaves_aux[i].remove(ChavesComuns[k])
-                        ChavesComuns.clear()   
+                        ChavesComuns.clear()
+                        ChavesComuns = []
         
-        for i in range (len(NomesTodasChaves)):
+        for i in range (len(NomesTodasChaves_aux)):
             N_Chaves_Malha.append(len(NomesTodasChaves_aux[i]))
         
         N_Malhas = len(NomesTodasChaves_aux)
         
-        NomesChaves = sum(NomesTodasChaves_aux, [])
+        NomesChaves_aux = sum(NomesTodasChaves_aux, [])
         
-        return NomesChaves, N_Chaves_Malha, N_Malhas
+        return NomesChaves_aux, N_Chaves_Malha, N_Malhas
     
         
     #esta função organiza o Fit em ordem crescente e consequentemente os Vizinhos e a lista de movimentos 
@@ -201,7 +207,7 @@ for i in range (N_Vezes):
     #em nenhum momento o vizinho de melhor fit é tabu com o tabu do S anterior.
     #caso uma malha seja tabu, a função pega o movimento do próximo vizinho de melhor fit (segundo, terceiro etc)
     #de forma a criar um NovoS totalmente renovado em relação ao anterior.
-    def NovoS (vizinhos_ch, vizinhos_bin, fit_vizinhos, N_Chaves_Malha, lista_tabu_completa):
+    def S_gerado (vizinhos_ch, vizinhos_bin, fit_vizinhos, N_Chaves_Malha, lista_tabu_completa):
         
         lista_tabu_completa_joined = [j for i in lista_tabu_completa for j in i]
         #novo_tabu = []
@@ -301,7 +307,7 @@ for i in range (N_Vezes):
     
     
     #vizinhos que pega o S atual e anda pra direita ou esquerda aleatoriamente o 0
-    def Vizinhos_LR (S, N_Malhas, N_Chaves_Malha):
+    def Vizinhos_LR_v1 (S, N_Malhas, N_Chaves_Malha):
     
         random.seed(datetime.now())
         direcao = random.randint(0, 1)   #se direcao == 0, esquerda, se direcao == 1, direita
@@ -382,6 +388,252 @@ for i in range (N_Vezes):
                                           
         return Vizinhos3_bin, Vizinhos3_ch, FitVizinhos3
     
+    def AbreUmaChave (chave, NomesChaves):
+        
+        S_bin = [1] * len(NomesChaves)
+        index = NomesChaves.index(chave)
+        S_bin[index] = 0
+        
+        return S_bin
+            
+    
+    def Vizinhos_metodoYuri(S_ch, N_Malhas, N_Chaves_Malha):
+            
+        NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves)                
+        Vizinho = []
+        Vizinhos_ch = []
+        potencias_ativas_trifasicas = []
+        potencias_malha_aux = []
+        potencias_aux_sorted = []
+        FitVizinhos3 = []
+        v = 0
+        for v in range (3): #for dos vizinhos (3 vizinhos)
+            potencias_sorted = []
+            ChavesComuns = []
+            ChavesNaoComunsMalhaM =[]
+            potencias_aux_sorted = []
+            potencias_aux = []
+            Vizinho = []
+            for m in range (N_Malhas): #for de cada uma das malhas em que será realizado o fluxo
+                S_umachave = AbreUmaChave(S_ch[m], NomesChaves)
+                fit = FitnessIndividuo(S_umachave, NomesChaves)
+                #print ("Trabalhando com a chave", S_ch[m])
+                #print ("S atual: ", DecodificadorChaves(S_umachave, NomesChaves))
+                #print (perdas)
+                #como o fluxo foi rodado, agora é possível obter as perdas pelo código a seguir:
+                potencias_ativas_trifasicas = []
+            #essa parte obtém o fluxo de cada uma das linhas e armazena no vetor potencias_ativas_trifasicas
+            #é válido comentar que esse vetor corresponde com o NomesChaves
+                for i in range (len(NomesTodasChaves_aux)): #for de cada uma das malhas
+                    potencias_malha_aux = []
+                    for j in range (len(NomesTodasChaves_aux[i])): #for das chaves dentro de cada malha
+                        num_linha = int(NomesTodasChaves_aux[i][j][1:]) #pega o numero da linha a que se refere
+                        objeto.ativa_elemento("Line.L"+str(num_linha)) #ativa a determinada linha
+                        potencias = (objeto.get_potencias_elemento()) #pega todas as potencias da linha
+                        potencias_malha_aux.append(abs(potencias[0] + potencias[2] + potencias[4])) #soma somente as potências ativas entrando na linha
+                    potencias_ativas_trifasicas.append(potencias_malha_aux)
+                
+                
+                potencias_aux = []
+                
+                #print ("as potencias para a malha", m, "são: ", potencias_ativas_trifasicas[m])
+                #print ("e as chaves são: ", NomesTodasChaves_aux[m])
+        
+                potencias_sorted = sorted(potencias_ativas_trifasicas[m], reverse=False) #ordena os fluxos de potência de forma crescente para uma determinada malha
+                menor_fluxo_chave_malha = potencias_sorted[v+1] 
+                index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[m].index(menor_fluxo_chave_malha) #obtém o index do menor fluxo no vetor original potencias_ativas_trifasicas
+                chave = NomesTodasChaves_aux[m][index_menor_fluxo_chave_malha] #obtém a chave no vetor NomesChaves
+                
+                for c in range(len(Vizinho)):
+                    ChavesComuns = list(set(NomesTodasChaves_aux[m]) & set(NomesTodasChaves_aux[c])) #chaves comuns entre a malha M e a malha C (das chaves anteriores)
+                    if ((chave in ChavesComuns) and (Vizinho[c] in ChavesComuns)):
+                        ChavesNaoComunsMalhaM = [x for x in NomesTodasChaves_aux[m] if x not in ChavesComuns] #obtém as chaves que não são comuns entre a malha I e a malha da chave em comum
+                        potencias_aux = []
+                        for j in range (len(ChavesNaoComunsMalhaM)): 
+                            index_aux = NomesTodasChaves_aux[m].index(ChavesNaoComunsMalhaM[j]) #encontra o index das chaves não comuns dentro do vetor NomesChaves
+                            potencias_aux.append(potencias_ativas_trifasicas[m][index_aux]) #adiciona ao vetor potencias_aux os fluxos das chaves não comuns
+                            potencias_aux_sorted = sorted(potencias_aux, reverse=False)
+                           
+                        menor_fluxo_chave_malha = potencias_aux_sorted[v+1] #pega o menor fluxo entre as chaves não comuns
+                        index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[m].index(menor_fluxo_chave_malha)
+                        chave = NomesTodasChaves_aux[m][index_menor_fluxo_chave_malha] #obtém no vetor NomesChaves a chave de menor fluxo
+                        break
+                    
+                Vizinho.append(chave)
+                #print ("a chave escolhida para essa malha foi", chave)
+    
+            fit = FitnessIndividuo_ch(Vizinho)
+            if (Radialidade()):
+                Vizinhos_ch.append(Vizinho)
+                FitVizinhos3.append(fit)
+                
+            Vizinho = []
+    
+        Vizinhos3_bin = []
+        Vizinhos3_ch = Vizinhos_ch
+        
+        for i in range (len(Vizinhos_ch)):
+            Vizinhos3_bin.append(CodificadorChaves(Vizinhos_ch[i], NomesChaves))
+            
+        return Vizinhos3_bin, Vizinhos3_ch, FitVizinhos3
+    
+    def FitnessIndividuo_ch(Ind_ch):
+        for i in range (len(NomesChaves)):
+            objeto.switch_elemento(NomesChaves[i], 1)
+        
+        for i in range(len(Ind_ch)):
+            objeto.switch_elemento(Ind_ch[i], 0)
+            
+        objeto.solve_DSS_snapshot()       
+        return objeto.get_line_losses()
+    
+    def Vizinhos_LR_v3 (S_ch, N_Malhas, N_Chaves_Malha):
+        
+        Vizinhos = []
+        indexfinal = 0
+        FitVizinhos = []
+    
+        for v in range (N_Malhas): #while dos vizinhos
+            Vizinho = S_ch.copy()
+            direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
+            indexfinal = indexfinal + N_Chaves_Malha[v] - 1
+            
+            if direcao == 0:
+                index = NomesChaves.index(Vizinho[v])
+                novoindex = index - 1
+                if (novoindex < (indexfinal-N_Chaves_Malha[v])):
+                    novoindex = index + N_Chaves_Malha[v]
+                         
+                Vizinho[v] = NomesChaves[novoindex]
+                
+            else:
+                index = NomesChaves.index(Vizinho[v])
+                novoindex = index + 1
+                if (novoindex > indexfinal):
+                    novoindex = indexfinal - N_Chaves_Malha[v]
+                    
+                Vizinho[v] = NomesChaves[novoindex]
+                
+            fit = FitnessIndividuo_ch(Vizinho)
+            if Radialidade():    
+                Vizinhos.append(Vizinho)
+                FitVizinhos.append(fit)
+            Vizinho = []
+            
+        #print (NomesChaves)    
+        #print ("Vizinhos LR", Vizinhos)
+        Vizinhos_bin = []
+        for i in range (len(Vizinhos)):
+            Vizinhos_bin.append(CodificadorChaves(Vizinhos[i], NomesChaves))
+            
+        return Vizinhos_bin, Vizinhos, FitVizinhos
+    
+    def Vizinhos_LR_v4 (S_ch, N_Malhas, N_Chaves_Malha):
+        
+        Vizinhos = []
+        indexfinal = 0
+        FitVizinhos = []
+    
+        for v in range (N_Malhas): #while dos vizinhos
+            Vizinho = S_ch.copy()
+            direcao = 0
+            indexfinal = indexfinal + N_Chaves_Malha[v] - 1
+            
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index - 1
+            if (novoindex < (indexfinal-N_Chaves_Malha[v])):
+                novoindex = index + N_Chaves_Malha[v]
+                     
+            Vizinho[v] = NomesChaves[novoindex]
+            
+                
+            fit = FitnessIndividuo_ch(Vizinho)
+            if Radialidade():    
+                Vizinhos.append(Vizinho)
+                FitVizinhos.append(fit)
+            Vizinho = []
+            
+        for v in range (N_Malhas): #while dos vizinhos
+            Vizinho = S_ch.copy()
+            direcao = 1
+            indexfinal = indexfinal + N_Chaves_Malha[v] - 1
+            
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index + 1
+            if (novoindex > indexfinal):
+                novoindex = indexfinal - N_Chaves_Malha[v]
+                
+            Vizinho[v] = NomesChaves[novoindex]
+                
+            fit = FitnessIndividuo_ch(Vizinho)
+            if Radialidade():    
+                Vizinhos.append(Vizinho)
+                FitVizinhos.append(fit)
+            Vizinho = []
+            
+        #print (NomesChaves)    
+        #print ("Vizinhos LR", Vizinhos)
+        Vizinhos_bin = []
+        for i in range (len(Vizinhos)):
+            Vizinhos_bin.append(CodificadorChaves(Vizinhos[i], NomesChaves))
+            
+        return Vizinhos_bin, Vizinhos, FitVizinhos
+        
+
+            
+    
+    def Vizinhos_LR_v2 (S, N_Malhas, N_Chaves_Malha):
+    
+        random.seed(datetime.now())
+        
+        Vizinho = S
+        changes_list = []
+        Vizinhos2 = []
+        Vizinhos = []
+        Vizinhos3_bin =[]
+        FitVizinhos3 = []
+        i = 0
+        
+        while i < N_Malhas: #while dos vizinhos
+            
+            #desta maneira vai variar esquerda e direita em cada vizinho
+        #for i in range(N_Malhas): #for dos vizinhos
+            inicio = 0
+            for j in range (N_Malhas): #for das malhas
+                direcao = random.randint(0, 1)   #se direcao == 0, esquerda, se direcao == 1, direita
+                if direcao == 0:
+                    andar = 1
+                else:
+                    andar = -1
+                index = Vizinho.index(0, inicio, inicio + N_Chaves_Malha[j])
+                if (index == (inicio + N_Chaves_Malha[j]-1)):         
+                    Vizinho[index] = 1
+                    Vizinho[inicio] = 0
+                    changes_list.append(inicio)
+                else:
+                    Vizinho[index] = 1
+                    Vizinho[index+1] = 0
+                    changes_list.append(index+andar)            
+                inicio = inicio + N_Chaves_Malha[j]
+            
+            fit = FitnessIndividuo(Vizinho, NomesChaves) #calcula o fit para que seja possível verificar a radialidade também
+            if (Radialidade()):
+                Vizinhos2.append(np.array(Vizinho))
+                Vizinhos.append(Vizinho)
+                FitVizinhos3.append(fit)
+                Vizinhos3_bin.append(Vizinhos2[i].tolist())
+                i+=1
+            else:
+                changes_list = changes_list[:len(changes_list)-N_Malhas]
+        
+        
+        Vizinhos3_ch = []
+        for i in range (len(Vizinhos3_bin)):
+            Vizinhos3_ch.append(DecodificadorChaves(Vizinhos3_bin[i], NomesChaves))
+        
+                                          
+        return Vizinhos3_bin, Vizinhos3_ch, FitVizinhos3
+    
     def Vizinhos_PFO (S, N_Malhas, N_Chaves_Malha):
         
         S_fechado = sum(N_Chaves_Malha)*[1]
@@ -406,7 +658,9 @@ for i in range (N_Vezes):
         Vizinhos_ch = []
         potencias_aux = []
         
-        for k in range (N_Malhas):
+        k = 0
+        #for k in range (N_Malhas):
+        while k < N_Malhas:
             for i in range (len(potencias_ativas_trifasicas)): #for de cada uma das malhas
                 potencias_sorted = sorted(potencias_ativas_trifasicas[i], reverse=False) #ordena os fluxos de potência de forma crescente para uma determinada malha
                 menor_fluxo_chave_malha = potencias_sorted[k]
@@ -428,7 +682,10 @@ for i in range (N_Vezes):
                     chave = NomesTodasChaves[i][index_menor_fluxo_chave_malha] #obtém no vetor NomesChaves a chave de menor fluxo
                 S.append(chave)
             
-            Vizinhos_ch.append(S)
+            fit = FitnessIndividuo (S, NomesChaves)
+            if Radialidade():
+                Vizinhos_ch.append(S)
+                k+=1
             S = []
         
         Vizinhos3_bin = []
@@ -456,6 +713,19 @@ for i in range (N_Vezes):
             inicio = inicio + N_Chaves_Malha[i]
         
         return S
+
+    def TestaSolucaoOtima (S_ch, N_Barras_Sistema):
+        if N_Barras_Sistema == 33:
+            S_otima = ['S7', 'S37', 'S9', 'S32', 'S14']
+        elif N_Barras_Sistema == 69:
+            S_otima = ["S69", "S14", "S55", "S61", "S70"]
+        
+        ChavesComuns = list(set(S_otima) & set(S_ch))
+        
+        if len (ChavesComuns) == N_Malhas:
+            return 1
+        else:
+            return 0
     
     #verifica se as tensões das barras estão nos limites especificados
     #e envia também o valor da menor tensão e da maior tensão
@@ -598,9 +868,13 @@ for i in range (N_Vezes):
 
         #NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves(NomesTodasChaves)
         
-        S_ch = S_inicial(NomesTodasChaves) #obtém o S inicial pelo método do menor fluxo nas malhas
-    
+        #S_ch = S_inicial(NomesTodasChaves) #obtém o S inicial pelo método do menor fluxo nas malhas
+        S_ch = ['S33','S37','S35','S36','S34']
+        #S_ch = ['S72','S69','S71','S70','S73']
         NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
+        
+        #S_bin = GeraS(N_Chaves_Malha, N_Malhas)
+        #S_ch = DecodificadorChaves(S_bin, NomesChaves)
         
         S_bin = CodificadorChaves(S_ch, NomesChaves)
                
@@ -630,9 +904,9 @@ for i in range (N_Vezes):
         
         i = 0
         BestIter = 1
-        T = 4 #tamanho da lista tabu
+         #tamanho da lista tabu
         
-        FitVizS = []
+        
         lista_tabu = [-1]*sum(N_Chaves_Malha)
         novo_tabu = [-1]*sum(N_Chaves_Malha)
         ChavesAbertasVizS = []
@@ -642,28 +916,26 @@ for i in range (N_Vezes):
         vizinhogerado = 0
         TodosS = []
         
-        
-                
+        aux1 = [0]
+        aux2 = [0]
+        aux3 = [0]
+                                
         while (i-BestIter) <= BTMax:
             
             i+=1
-            print ("================NOVA ITERAÇÃO=================", i)
-            print ("Partindo com Solução Corrente:", S_ch)
+            #print ("================NOVA ITERAÇÃO=================", i)
+            #print ("Partindo com Solução Corrente:", S_ch)
             
-            if (i==1):
-                VizS_bin, VizS_ch, FitVizS = Vizinhos_PFO(S_bin, N_Malhas, N_Chaves_Malha) 
-                print ("Vizinhos PFO")
-            else:                                           
-                if (i%2 == 0):
-                    VizS_bin, VizS_ch, FitVizS = Vizinhos_random(S_bin, N_Malhas, N_Chaves_Malha)
-                    print ("Vizinhos aleatórios")
-                else:
-                    VizS_bin, VizS_ch, FitVizS = Vizinhos_LR(S_bin, N_Malhas, N_Chaves_Malha)
-                    print ("Vizinhos esquerda/direita")
-            #lista_movimentos é um array que guarda todos os movimentos feitos em cada malha em cada vizinho
-            #ou seja, lista_movimentos = [0, 1, 2, 4, 5, 6], por exemplo, 0 1 2 foram os movimentos para as malhas 1, 2 e 3 do primeiro vizinhi
-            #enquanto 4, 5 6 foram movimentos das malhas 1 2 e 3 para o segundo vizinho etc
-            #lista_movimentos_separados gera os movimentos de cada vizinho em listas diferentes, tipo [[0, 1, 2],[3, 4, 5]]
+            
+            #if (i%3 == 0):
+            #aux1[0], aux2[0], aux3[0] = Vizinhos_metodoYuri(S_ch, N_Malhas, N_Chaves_Malha) 
+            #aux1[1], aux2[1], aux3[1] = Vizinhos_random(S_bin, N_Malhas, N_Chaves_Malha)
+            aux1[0], aux2[0], aux3[0] = Vizinhos_LR_v3(S_ch, N_Malhas, N_Chaves_Malha)
+            #aux1[0], aux2[0], aux3[0] = Vizinhos_LR_v4(S_ch, N_Malhas, N_Chaves_Malha)
+            
+            VizS_bin = [item for sublist in aux1 for item in sublist]
+            VizS_ch = [item for sublist in aux2 for item in sublist]
+            FitVizS = [item for sublist in aux3 for item in sublist]
             
             lista_tabu = novo_tabu    
             
@@ -679,18 +951,18 @@ for i in range (N_Vezes):
             fitorg, vizorg_bin, vizorg_ch = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS_bin, VizS_ch)
             
             #caso já tenha passado a primeira iteração já é possível calcular o S gerado (levando em consideração a LT)
-            if (i>1):
-                S_gerado_ch, S_gerado_bin, fit_S_gerado = NovoS(vizorg_ch, vizorg_bin, fitorg, N_Chaves_Malha, lista_tabu_completa)
+            """if (i>1):
+                S_gerado_ch, S_gerado_bin, fit_S_gerado = S_gerado(vizorg_ch, vizorg_bin, fitorg, N_Chaves_Malha, lista_tabu_completa)
                 VizS_bin.append(S_gerado_bin)
                 VizS_ch.append(S_gerado_ch)
                 FitVizS.append(fit_S_gerado)
-                print ("S gerado: ", S_gerado_ch)
+                print ("S gerado: ", S_gerado_ch)"""
             
             #reorganiza novamente agora com o novo vizinho (S gerado)
             fitorg, vizorg_bin, vizorg_ch = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS_bin, VizS_ch)
             
-            for j in range(len(vizorg_ch)):
-                print ("Vizinho", j, vizorg_ch[j], "Fit:", fitorg[j])
+            #for j in range(len(vizorg_ch)):
+            #    print ("Vizinho", j, vizorg_ch[j], "Fit:", fitorg[j])
         
             #PARTE DA ESCOLHA DO NOVO S:
             if (fitorg[0] < BestFit): #função de aspiração: caso o melhor vizinho seja a melhor solução já encontrada mas estiver na LT, aceita mesmo assim 
@@ -702,7 +974,7 @@ for i in range (N_Vezes):
                 lista_tabu_completa_flat = [item for sublist in lista_tabu_completa for item in sublist]
                 for m in range (len(vizorg_ch)):
                     if (any(n in lista_tabu_completa_flat for n in vizorg_ch[m]) == False):
-                        print ("O vizinho escolhido foi o", m)
+                        #print ("O vizinho escolhido foi o", m)
                         S_bin = vizorg_bin[m]
                         S_ch = vizorg_ch[m]
                         fit_novo_S = fitorg[m]
@@ -711,30 +983,31 @@ for i in range (N_Vezes):
             
             #se o fit do novo S for o melhor já encontrado:
             if (BestFit > fit_novo_S):
-                BestFit =  fit_novo_S
+                
                 BestS_bin = S_bin
                 BestS_ch = S_ch
                 BestIter = i
-                print ("Novos BestFit e BestS encontrados")
+                #print ("Novos BestFit e BestS encontrados")
+                BestFit =  FitnessIndividuo(BestS_bin, NomesChaves)
                 status_tensao, min_tensao, max_tensao = Limites_tensao(7309)
                 if (status_tensao == 1):
-                    print ("Tensao nos limites")
+                    #print ("Tensao nos limites")
                     tensao = 1
                 else:
-                    print ("Tensao fora dos limites")
+                    #print ("Tensao fora dos limites")
                     tensao = 0
                 if (Radialidade()):
-                    print("Sistema radial")
+                    #print("Sistema radial")
                     radialidade = 1
                 else:
-                    print ("Sistema nao radial")
+                    #print ("Sistema nao radial")
                     radialidade = 0
                 
             
-            print ("Novo S:", S_ch, "Fit:", fit_novo_S)
+            #print ("Novo S:", S_ch, "Fit:", fit_novo_S)
             #print ("Lista Tabu: ", novo_tabu)
             
-            print ("BestS: ", BestS_ch, "BestFit:", BestFit)
+            #print ("BestS: ", BestS_ch, "BestFit:", BestFit)
             
             #reorganiza as chaves para dar uma aleatoriedade ao sistema;
             #além disso, evita que as chaves fiquem engessadas em uma malha só sempre
@@ -770,7 +1043,12 @@ for i in range (N_Vezes):
             MelhoresSGerais.append(BestS_ch)
             MinimasTensoesGerais.append(min_tensao)
             MaximasTensoesGerais.append(max_tensao)
+            solucao_otima = TestaSolucaoOtima(BestS_ch, N_Barras_Sistema)
+            if solucao_otima == 1:
+                solucoesotimas += 1
             
+        NomesChaves = []
+        NomesTodasChaves = []
 
     
     
@@ -781,9 +1059,11 @@ for i in range (len(MelhoresFitsGerais)):
     print ("Tensao minima: ", round (MinimasTensoesGerais[i],4), "pu")           
     print ("Tensão máxima: ", round (MaximasTensoesGerais[i],4), "pu")
     
+    
 print ("Média de perdas para",N_Vezes,"configurações obtidas para sistema de", 
        N_Barras_Sistema, "barras: ", round(sum(MelhoresFitsGerais)/len(MelhoresFitsGerais),3))
-        
+
+print ("O sistema obteve", solucoesotimas,"soluções ótimas para", len(MelhoresFitsGerais), "soluções entregues")       
             
     
     
