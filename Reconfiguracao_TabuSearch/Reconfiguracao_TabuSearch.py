@@ -1,5 +1,5 @@
 """Especifique quantas vezes você quer que o programa rode:"""
-N_Vezes = 50
+N_Vezes = 10
 """Especifique o endereço do arquivo Opendss (dentro dos colchetes):"""
 address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
 
@@ -7,15 +7,19 @@ address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\
 N_Barras_Sistema = 33
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
-BTMax = 60
+BTMax = 50
 
-"Especifique o tamanho da Lista Tabu"
+"""Especifique o tamanho da Lista Tabu"""
 T = 3
+
+"""Número máximo de iterações"""
+MaxIter = 1000
 
 MelhoresFitsGerais = []
 MelhoresSGerais = []
 MinimasTensoesGerais = []
 MaximasTensoesGerais = []
+TempoGasto = []
 
 solucoesotimas = 0
 k = 0
@@ -27,6 +31,9 @@ for i in range (N_Vezes):
     from datetime import datetime
     import random 
     import copy
+    import time
+    
+    start = time.time()
     
     def Ajuste_SistemaNBarras (N_Barras):
         
@@ -150,14 +157,21 @@ for i in range (N_Vezes):
         #soma = len(NomesTodasChaves[0]) + len(NomesTodasChaves[1])+len(NomesTodasChaves[2])+len(NomesTodasChaves[3]) + len(NomesTodasChaves[4])
         
         NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves)
-    
+        #soma = len(NomesTodasChaves_aux[0])+len(NomesTodasChaves_aux[1])+len(NomesTodasChaves_aux[2])+len(NomesTodasChaves_aux[3])+len(NomesTodasChaves_aux[4])
+        #print ("SOMA NOMESTODASCHAVES ANTES", soma)
+        
+        #print ("LEN NOMES TODAS CHAVES 1", len(NomesTodasChaves_aux))
         for i in range (len(S_ch)):
             for j in range (len(NomesTodasChaves_aux)):
                 if (i!=j):
                     if S_ch[i] in NomesTodasChaves_aux[j]:
+                        #print ("S_ch", S_ch)
+                        #print ("S_ch[i]", S_ch[i])
                         NomesTodasChaves_aux[j].remove(S_ch[i])
-    
         
+        #soma = len(NomesTodasChaves_aux[0])+len(NomesTodasChaves_aux[1])+len(NomesTodasChaves_aux[2])+len(NomesTodasChaves_aux[3])+len(NomesTodasChaves_aux[4])
+        #print ("SOMA NOMESTODASCHAVES DEPOIS", soma)
+        #print ("LEN NOMES TODAS CHAVES 2", len(NomesTodasChaves_aux))
         #lembrando que ChavesMalha nessa função é o array com todas as chaves de todas as malhas (incluindo as repetidas)
         for i in range (len(NomesTodasChaves_aux)):
             for j in range (len(NomesTodasChaves_aux)):
@@ -177,9 +191,13 @@ for i in range (N_Vezes):
         for i in range (len(NomesTodasChaves_aux)):
             N_Chaves_Malha.append(len(NomesTodasChaves_aux[i]))
         
+        #print ("LEN NOMES TODAS CHAVES 3", len(NomesTodasChaves_aux))
+        
         N_Malhas = len(NomesTodasChaves_aux)
         
         NomesChaves_aux = sum(NomesTodasChaves_aux, [])
+        
+        #print ("LEN NOMES CHAVES", len(NomesChaves_aux))
         
         return NomesChaves_aux, N_Chaves_Malha, N_Malhas
     
@@ -492,30 +510,111 @@ for i in range (N_Vezes):
         Vizinhos = []
         indexfinal = 0
         FitVizinhos = []
-    
+        
+        N_Chaves_Malha_index = []
+        soma = 0
+        for i in range (len(N_Chaves_Malha)):
+            soma = N_Chaves_Malha[i] + soma
+            N_Chaves_Malha_index.append(soma - 1)
+        
+        
         for v in range (N_Malhas): #while dos vizinhos
             Vizinho = S_ch.copy()
             direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
-            indexfinal = indexfinal + N_Chaves_Malha[v] - 1
-            
             if direcao == 0:
-                index = NomesChaves.index(Vizinho[v])
-                novoindex = index - 1
-                if (novoindex < (indexfinal-N_Chaves_Malha[v])):
-                    novoindex = index + N_Chaves_Malha[v]
-                         
-                Vizinho[v] = NomesChaves[novoindex]
-                
+                direcao = -1
+    
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index + direcao
+    
+            if (novoindex > N_Chaves_Malha_index[v]):
+                Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+            elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
+                Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
             else:
-                index = NomesChaves.index(Vizinho[v])
-                novoindex = index + 1
-                if (novoindex > indexfinal):
-                    novoindex = indexfinal - N_Chaves_Malha[v]
-                    
                 Vizinho[v] = NomesChaves[novoindex]
-                
+                    
             fit = FitnessIndividuo_ch(Vizinho)
-            if Radialidade():    
+            #print (Vizinho)
+            
+            if Radialidade():
+                #print ("radial")
+                #print (fit)
+                Vizinhos.append(Vizinho)
+                FitVizinhos.append(fit)
+            Vizinho = []
+            
+        #print (NomesChaves)    
+        #print ("Vizinhos LR", Vizinhos)
+        Vizinhos_bin = []
+        for i in range (len(Vizinhos)):
+            Vizinhos_bin.append(CodificadorChaves(Vizinhos[i], NomesChaves))
+            
+        return Vizinhos_bin, Vizinhos, FitVizinhos
+    
+    def Vizinhos_LR_v5 (S_ch, N_Malhas, N_Chaves_Malha):
+        
+        Vizinhos = []
+        indexfinal = 0
+        FitVizinhos = []
+        
+        N_Chaves_Malha_index = []
+        soma = 0
+        for i in range (len(N_Chaves_Malha)):
+            soma = N_Chaves_Malha[i] + soma
+            N_Chaves_Malha_index.append(soma - 1)
+        
+        
+        for v in range (N_Malhas): #while dos vizinhos
+            Vizinho = S_ch.copy()
+            direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
+            if direcao == 0:
+                direcao = -1
+    
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index + direcao
+    
+            if (novoindex > N_Chaves_Malha_index[v]):
+                Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+            elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
+                Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
+            else:
+                Vizinho[v] = NomesChaves[novoindex]
+                    
+            fit = FitnessIndividuo_ch(Vizinho)
+            #print (Vizinho)
+            
+            if Radialidade():
+                #print ("radial")
+                #print (fit)
+                Vizinhos.append(Vizinho)
+                FitVizinhos.append(fit)
+            Vizinho = []
+            
+        for v in range (N_Malhas): #while dos vizinhos
+            Vizinho = S_ch.copy()
+            direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
+            if direcao == 0:
+                direcao = -2
+            else:
+                direcao = 2
+    
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index + direcao
+    
+            if (novoindex > N_Chaves_Malha_index[v]):
+                Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+            elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
+                Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
+            else:
+                Vizinho[v] = NomesChaves[novoindex]
+                    
+            fit = FitnessIndividuo_ch(Vizinho)
+            #print (Vizinho)
+            
+            if Radialidade():
+                #print ("radial")
+                #print (fit)
                 Vizinhos.append(Vizinho)
                 FitVizinhos.append(fit)
             Vizinho = []
@@ -533,40 +632,60 @@ for i in range (N_Vezes):
         Vizinhos = []
         indexfinal = 0
         FitVizinhos = []
-    
+        
+        N_Chaves_Malha_index = []
+        soma = 0
+        for i in range (len(N_Chaves_Malha)):
+            soma = N_Chaves_Malha[i] + soma
+            N_Chaves_Malha_index.append(soma - 1)
+        
+        
         for v in range (N_Malhas): #while dos vizinhos
             Vizinho = S_ch.copy()
-            direcao = 0
-            indexfinal = indexfinal + N_Chaves_Malha[v] - 1
-            
-            index = NomesChaves.index(Vizinho[v])
-            novoindex = index - 1
-            if (novoindex < (indexfinal-N_Chaves_Malha[v])):
-                novoindex = index + N_Chaves_Malha[v]
-                     
-            Vizinho[v] = NomesChaves[novoindex]
-            
+            direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
+            direcao == -1
                 
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index + direcao
+    
+            if (novoindex > N_Chaves_Malha_index[v]):
+                Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+            elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
+                Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
+            else:
+                Vizinho[v] = NomesChaves[novoindex]
+                    
             fit = FitnessIndividuo_ch(Vizinho)
-            if Radialidade():    
+            #print (Vizinho)
+            
+            if Radialidade():
+                #print ("radial")
+                #print (fit)
                 Vizinhos.append(Vizinho)
                 FitVizinhos.append(fit)
             Vizinho = []
             
         for v in range (N_Malhas): #while dos vizinhos
             Vizinho = S_ch.copy()
+            direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
             direcao = 1
-            indexfinal = indexfinal + N_Chaves_Malha[v] - 1
-            
+    
             index = NomesChaves.index(Vizinho[v])
-            novoindex = index + 1
-            if (novoindex > indexfinal):
-                novoindex = indexfinal - N_Chaves_Malha[v]
-                
-            Vizinho[v] = NomesChaves[novoindex]
-                
+            novoindex = index + direcao
+    
+            if (novoindex > N_Chaves_Malha_index[v]):
+                Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+            elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
+                Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
+            else:
+                Vizinho[v] = NomesChaves[novoindex]
+                    
             fit = FitnessIndividuo_ch(Vizinho)
-            if Radialidade():    
+            #print (Vizinho)
+            
+            if Radialidade():
+                #print ("radial")
+                #print (fit)
                 Vizinhos.append(Vizinho)
                 FitVizinhos.append(fit)
             Vizinho = []
@@ -578,6 +697,8 @@ for i in range (N_Vezes):
             Vizinhos_bin.append(CodificadorChaves(Vizinhos[i], NomesChaves))
             
         return Vizinhos_bin, Vizinhos, FitVizinhos
+    
+
         
 
             
@@ -872,7 +993,6 @@ for i in range (N_Vezes):
         S_ch = ['S33','S37','S35','S36','S34']
         #S_ch = ['S72','S69','S71','S70','S73']
         NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
-        
         #S_bin = GeraS(N_Chaves_Malha, N_Malhas)
         #S_ch = DecodificadorChaves(S_bin, NomesChaves)
         
@@ -929,13 +1049,15 @@ for i in range (N_Vezes):
             
             #if (i%3 == 0):
             #aux1[0], aux2[0], aux3[0] = Vizinhos_metodoYuri(S_ch, N_Malhas, N_Chaves_Malha) 
-            #aux1[1], aux2[1], aux3[1] = Vizinhos_random(S_bin, N_Malhas, N_Chaves_Malha)
-            aux1[0], aux2[0], aux3[0] = Vizinhos_LR_v3(S_ch, N_Malhas, N_Chaves_Malha)
+            #aux1[0], aux2[0], aux3[0] = Vizinhos_random(S_bin, N_Malhas, N_Chaves_Malha)
+            """aux1[0], aux2[0], aux3[0] = Vizinhos_LR_v3(S_ch, N_Malhas, N_Chaves_Malha)
             #aux1[0], aux2[0], aux3[0] = Vizinhos_LR_v4(S_ch, N_Malhas, N_Chaves_Malha)
             
             VizS_bin = [item for sublist in aux1 for item in sublist]
             VizS_ch = [item for sublist in aux2 for item in sublist]
-            FitVizS = [item for sublist in aux3 for item in sublist]
+            FitVizS = [item for sublist in aux3 for item in sublist]"""
+            
+            VizS_bin, VizS_ch, FitVizS = Vizinhos_LR_v5 (S_ch, N_Malhas, N_Chaves_Malha)
             
             lista_tabu = novo_tabu    
             
@@ -982,7 +1104,7 @@ for i in range (N_Vezes):
                         break
             
             #se o fit do novo S for o melhor já encontrado:
-            if (BestFit > fit_novo_S):
+            if (fit_novo_S < BestFit):
                 
                 BestS_bin = S_bin
                 BestS_ch = S_ch
@@ -1003,7 +1125,8 @@ for i in range (N_Vezes):
                     #print ("Sistema nao radial")
                     radialidade = 0
                 
-            
+            if (i == MaxIter):
+                break
             #print ("Novo S:", S_ch, "Fit:", fit_novo_S)
             #print ("Lista Tabu: ", novo_tabu)
             
@@ -1012,6 +1135,7 @@ for i in range (N_Vezes):
             #reorganiza as chaves para dar uma aleatoriedade ao sistema;
             #além disso, evita que as chaves fiquem engessadas em uma malha só sempre
             NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
+            
             S_bin = CodificadorChaves(S_ch, NomesChaves)
             #NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves(NomesTodasChaves)
             
@@ -1019,13 +1143,14 @@ for i in range (N_Vezes):
             VizS_ch.clear()
             FitVizS.clear()
 
+
             fitorg.clear()
             FitVizS.clear()
             vizorg_bin.clear()
             vizorg_ch.clear()
             
         
-        print ("--------Resultado desta rodada-------- ")
+        print ("--------Resultado da rodada", k, "--------")
         print ("BestIter: ", BestIter)
         print ("Melhor configuração: ", BestS_ch, "Fit: ", BestFit)
         if (tensao==1):
@@ -1039,6 +1164,8 @@ for i in range (N_Vezes):
             
         if (tensao == 1 and radialidade == 1):
             k+=1
+            end = time.time()
+            TempoGasto.append(end-start)
             MelhoresFitsGerais.append(BestFit)
             MelhoresSGerais.append(BestS_ch)
             MinimasTensoesGerais.append(min_tensao)
@@ -1046,6 +1173,7 @@ for i in range (N_Vezes):
             solucao_otima = TestaSolucaoOtima(BestS_ch, N_Barras_Sistema)
             if solucao_otima == 1:
                 solucoesotimas += 1
+                print ("Solução ótima encontrada!")
             
         NomesChaves = []
         NomesTodasChaves = []
@@ -1058,12 +1186,17 @@ for i in range (len(MelhoresFitsGerais)):
     print ("Fit: ", round (MelhoresFitsGerais[i],3), "kW")
     print ("Tensao minima: ", round (MinimasTensoesGerais[i],4), "pu")           
     print ("Tensão máxima: ", round (MaximasTensoesGerais[i],4), "pu")
+    print ("Tempo gasto: ", TempoGasto[i])
     
     
 print ("Média de perdas para",N_Vezes,"configurações obtidas para sistema de", 
        N_Barras_Sistema, "barras: ", round(sum(MelhoresFitsGerais)/len(MelhoresFitsGerais),3))
 
-print ("O sistema obteve", solucoesotimas,"soluções ótimas para", len(MelhoresFitsGerais), "soluções entregues")       
+print ("O sistema obteve", solucoesotimas,"soluções ótimas para", len(MelhoresFitsGerais), "soluções entregues")   
+
+print ("Tempo gasto total: ", sum(TempoGasto))
+
+    
             
     
     
