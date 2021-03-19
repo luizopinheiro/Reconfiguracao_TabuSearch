@@ -1,13 +1,13 @@
 """Especifique quantas vezes você quer que o programa rode:"""
-N_Vezes = 10
+N_Vezes = 40
 """Especifique o endereço do arquivo Opendss (dentro dos colchetes):"""
-address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
+address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\94_nos.dss]"
 
-"""Especifique o número de barras do sistema que você quer trabalhar (33 ou 69):"""
-N_Barras_Sistema = 33
+"""Especifique o número de barras do sistema que você quer trabalhar (33, 69 ou 94):"""
+N_Barras_Sistema = 94
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
-BTMax = 50
+BTMax = 200
 
 """Especifique o tamanho da Lista Tabu"""
 T = 3
@@ -56,6 +56,32 @@ for i in range (N_Vezes):
             NomesTodasChaves[2] = ["S33","S8","S9","S10","S11","S35","S21"]
             NomesTodasChaves[3] = ["S25","S26","S27","S28","S29","S30","S31","S32","S36","S17","S16","S15","S34","S8","S7","S6"]
             NomesTodasChaves[4] = ["S34","S14","S13","S12","S11","S10","S9"]
+            return NomesTodasChaves
+        elif (N_Barras == 94):
+            NomesTodasChaves = [0]*13
+            NomesTodasChaves[0] = ["S84","S54","S53","S96","S63","S62","S61","S85","S6",
+                                   "S7","S4"]
+            NomesTodasChaves[1] = ["S87","S72","S70","S69","S68","S67","S66","S65","S13",
+                                   "S88","S75","S74","S73","S76","S71"]
+            NomesTodasChaves[2] = ["S77","S78","S79","S80","S81","S82","S83","S91","S20",
+                                   "S19","S89","S14","S13","S88","S76","S75","S74","S73"]
+            NomesTodasChaves[3] = ["S65","S66","S67","S68","S69","S70","S71","S72","S87",
+                                   "S11","S12"]
+            NomesTodasChaves[4] = ["S12","S14","S89","S18","S17","S90","S27","S28","S29",
+                                   "S93","S40","S95","S94","S86","S35","S36","S37","S38",
+                                   "S41","S42","S44","S45","S46"]
+            NomesTodasChaves[5] = ["S43","S44","S45","S46","S94","S30","S31","S32","S33",
+                                   "S34"]
+            NomesTodasChaves[6] = ["S41","S42","S95","S40","S39"]
+            NomesTodasChaves[7] = ["S33","S34","S35","S36","S37","S38","S39","S93","S29",
+                                   "S92"]
+            NomesTodasChaves[8] = ["S30","S31","S32","S92","S25","S26","S27","S28"]
+            NomesTodasChaves[9] = ["S25","S26","S90","S15","S16"]
+            NomesTodasChaves[10] = ["S47","S48","S49","S50","S51","S52","S53","S1","S2",
+                                    "S3","S4","S5","S84","S54","S55"]
+            NomesTodasChaves[11] = ["S1","S2","S3","S4","S5","S6","S7","S85","S56","S57",
+                                    "S58","S59","S60"]
+            NomesTodasChaves[12] = ["S11","S86","S43"]
             return NomesTodasChaves
             
     
@@ -627,6 +653,109 @@ for i in range (N_Vezes):
             
         return Vizinhos_bin, Vizinhos, FitVizinhos
     
+    def Vizinhos_LR_v6 (S_ch, N_Malhas, N_Chaves_Malha, N_vizinhos):
+        
+        Vizinhos = []
+        indexfinal = 0
+        FitVizinhos = []
+        
+        N_Chaves_Malha_index = []
+        soma = 0
+        for i in range (len(N_Chaves_Malha)):
+            soma = N_Chaves_Malha[i] + soma
+            N_Chaves_Malha_index.append(soma - 1)
+        
+        
+        for v in range (N_Malhas): #while dos vizinhos
+            Vizinho = S_ch.copy()
+            direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
+            if direcao == 0:
+                direcao = -1
+    
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index + direcao
+    
+            if (novoindex > N_Chaves_Malha_index[v]):
+                Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+            elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
+                Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
+            else:
+                Vizinho[v] = NomesChaves[novoindex]
+                    
+            fit = FitnessIndividuo_ch(Vizinho)
+            #print (Vizinho)
+            
+            if Radialidade():
+                #print ("radial")
+                #print (fit)
+                Vizinhos.append(Vizinho)
+                FitVizinhos.append(fit)
+            Vizinho = []
+            
+        for v in range (N_Malhas): #while dos vizinhos
+            Vizinho = S_ch.copy()
+            direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
+            if direcao == 0:
+                direcao = -2
+            else:
+                direcao = 2
+    
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index + direcao
+    
+            if (novoindex > N_Chaves_Malha_index[v]):
+                Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+            elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
+                Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
+            else:
+                Vizinho[v] = NomesChaves[novoindex]
+                    
+            fit = FitnessIndividuo_ch(Vizinho)
+            #print (Vizinho)
+            
+            if Radialidade():
+                #print ("radial")
+                #print (fit)
+                Vizinhos.append(Vizinho)
+                FitVizinhos.append(fit)
+            Vizinho = []
+            
+        for v in range (N_Malhas): #while dos vizinhos
+            Vizinho = S_ch.copy()
+            direcao = random.randint(0, 1) #1 pra direita e 0 pra esquerda
+            if direcao == 0:
+                direcao = -3
+            else:
+                direcao = 3
+    
+            index = NomesChaves.index(Vizinho[v])
+            novoindex = index + direcao
+    
+            if (novoindex > N_Chaves_Malha_index[v]):
+                Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+            elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
+                Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
+            else:
+                Vizinho[v] = NomesChaves[novoindex]
+                    
+            fit = FitnessIndividuo_ch(Vizinho)
+            #print (Vizinho)
+            
+            if Radialidade():
+                #print ("radial")
+                #print (fit)
+                Vizinhos.append(Vizinho)
+                FitVizinhos.append(fit)
+            Vizinho = []
+            
+        #print (NomesChaves)    
+        #print ("Vizinhos LR", Vizinhos)
+        Vizinhos_bin = []
+        for i in range (len(Vizinhos)):
+            Vizinhos_bin.append(CodificadorChaves(Vizinhos[i], NomesChaves))
+            
+        return Vizinhos_bin, Vizinhos, FitVizinhos
+    
     def Vizinhos_LR_v4 (S_ch, N_Malhas, N_Chaves_Malha):
         
         Vizinhos = []
@@ -840,11 +969,13 @@ for i in range (N_Vezes):
             S_otima = ['S7', 'S37', 'S9', 'S32', 'S14']
         elif N_Barras_Sistema == 69:
             S_otima = ["S69", "S14", "S55", "S61", "S70"]
+        elif N_Barras_Sistema == 94:
+            S_otima = ["S55","S7","S86","S72","S13","S89","S90","S83","S92","S39","S34","S42","S62"]
         
         ChavesComuns = list(set(S_otima) & set(S_ch))
         
         if len (ChavesComuns) == N_Malhas:
-            return 1
+            return 1 #solução ótima
         else:
             return 0
     
@@ -859,6 +990,8 @@ for i in range (N_Vezes):
         max_tensao_pu = max(tensoes)/tensao_especificada
         if (min(tensoes) < limite_inferior) or (max(tensoes) > limite_superior):
             return 0, min_tensao_pu, max_tensao_pu #se quebrar os limites, retorna 0
+            print ("min_tensao_pu", min_tensao_pu)
+            print (tensoes)
         
         return 1, min_tensao_pu, max_tensao_pu #se nao quebrar os limites, retorna 1 
 
@@ -990,8 +1123,9 @@ for i in range (N_Vezes):
         #NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves(NomesTodasChaves)
         
         #S_ch = S_inicial(NomesTodasChaves) #obtém o S inicial pelo método do menor fluxo nas malhas
-        S_ch = ['S33','S37','S35','S36','S34']
+        #S_ch = ['S33','S37','S35','S36','S34']
         #S_ch = ['S72','S69','S71','S70','S73']
+        S_ch = ["S96","S88","S91","S87","S89","S94","S95","S93","S92","S90","S84","S85","S86"]
         NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
         #S_bin = GeraS(N_Chaves_Malha, N_Malhas)
         #S_ch = DecodificadorChaves(S_bin, NomesChaves)
@@ -1006,7 +1140,7 @@ for i in range (N_Vezes):
         BestS_ch = S_ch
         Iter = 0
         
-        status_tensao, min_tensao, max_tensao = Limites_tensao(7309)
+        status_tensao, min_tensao, max_tensao = Limites_tensao(6581)
         if (status_tensao == 1):
             print ("Tensao nos limites")
             tensao = 1
@@ -1057,7 +1191,7 @@ for i in range (N_Vezes):
             VizS_ch = [item for sublist in aux2 for item in sublist]
             FitVizS = [item for sublist in aux3 for item in sublist]"""
             
-            VizS_bin, VizS_ch, FitVizS = Vizinhos_LR_v5 (S_ch, N_Malhas, N_Chaves_Malha)
+            VizS_bin, VizS_ch, FitVizS = Vizinhos_LR_v3 (S_ch, N_Malhas, N_Chaves_Malha)
             
             lista_tabu = novo_tabu    
             
@@ -1084,7 +1218,7 @@ for i in range (N_Vezes):
             fitorg, vizorg_bin, vizorg_ch = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS_bin, VizS_ch)
             
             #for j in range(len(vizorg_ch)):
-            #    print ("Vizinho", j, vizorg_ch[j], "Fit:", fitorg[j])
+            #   print ("Vizinho", j, vizorg_ch[j], "Fit:", fitorg[j])
         
             #PARTE DA ESCOLHA DO NOVO S:
             if (fitorg[0] < BestFit): #função de aspiração: caso o melhor vizinho seja a melhor solução já encontrada mas estiver na LT, aceita mesmo assim 
@@ -1110,8 +1244,8 @@ for i in range (N_Vezes):
                 BestS_ch = S_ch
                 BestIter = i
                 #print ("Novos BestFit e BestS encontrados")
-                BestFit =  FitnessIndividuo(BestS_bin, NomesChaves)
-                status_tensao, min_tensao, max_tensao = Limites_tensao(7309)
+                BestFit =  FitnessIndividuo_ch(BestS_ch)
+                status_tensao, min_tensao, max_tensao = Limites_tensao(6581)
                 if (status_tensao == 1):
                     #print ("Tensao nos limites")
                     tensao = 1
