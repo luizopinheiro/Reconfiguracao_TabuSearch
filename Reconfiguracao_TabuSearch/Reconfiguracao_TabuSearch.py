@@ -8,16 +8,16 @@ address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\
 N_Barras_Sistema = 69
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
-BTMax = 250
+BTMax = 200
 
 """Especifique o tamanho da Lista Tabu"""
-T = 1
+T = 3
 
 """Número máximo de iterações"""
 MaxIter = 2000
 
 """Versão do código"""
-versao_codigo = "12.2"
+versao_codigo = "12.3"
 
 MelhoresFitsGerais = []
 MelhoresSGerais = []
@@ -40,9 +40,76 @@ for i in range (N_Vezes):
     import random 
     import copy
     import time
-    import cmath
-    
+   
     start = time.time()
+    
+    def S_inicial_PFO(NomesTodasChaves): 
+    
+        objeto.solve_DSS_snapshot()       
+        potencias_ativas_trifasicas = []
+        potencias_malha_aux = []
+        
+        NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves) 
+                
+        #essa parte obtém o fluxo de cada uma das linhas e armazena no vetor potencias_ativas_trifasicas
+        #é válido comentar que esse vetor corresponde com o NomesChaves
+        for i in range (len(NomesTodasChaves)): #for de cada uma das malhas
+            potencias_malha_aux = []
+            for j in range (len(NomesTodasChaves[i])): #for das chaves dentro de cada malha
+                objeto.dssSwtControl.Name = NomesTodasChaves_aux[i][j] #ativa o switch pelo nome da chave
+                switched_obj = objeto.dssSwtControl.SwitchedObj  #descobre o nome da linha referente
+                objeto.ativa_elemento(switched_obj) #ativa a determinada linha
+                b1, b2 = objeto.get_barras_elemento()
+                potencias = (objeto.get_potencias_elemento()) #pega todas as potencias da linha
+                potencias_malha_aux.append(abs(potencias[0] + potencias[2] + potencias[4])) #soma somente as potências ativas entrando na linha
+            potencias_ativas_trifasicas.append(potencias_malha_aux)
+            
+            
+        
+        #for i in range (len(NomesTodasChaves)):
+            #print ("=====Malha", i,"======")
+            #for j in range (len(NomesTodasChaves[i])):
+            #    print ("Potencia na chave", NomesTodasChaves[i][j],": ", potencias_ativas_trifasicas[i][j])
+        
+        chaves = []
+        for i in range (len(potencias_ativas_trifasicas)): #for de cada uma das malhas
+            potencias_sorted = sorted(potencias_ativas_trifasicas[i], reverse=False) #ordena os fluxos de potência de forma crescente para uma determinada malha
+            menor_fluxo_chave_malha = potencias_sorted[0]
+            index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[i].index(menor_fluxo_chave_malha) #obtém o index do menor fluxo no vetor original potencias_ativas_trifasicas
+            chave = NomesTodasChaves[i][index_menor_fluxo_chave_malha] #obtém a chave no vetor NomesTodasChaves
+            #print ("====Malha", i,"====")
+            #print ("Chave inicialmente escolhida:", chave)
+            c = 0
+            k = 0
+
+            #while c < len(chaves):
+            for c in range(len(chaves)):
+                ChavesComuns = list(set(NomesTodasChaves_aux[i]) & set(NomesTodasChaves_aux[c])) #chaves comuns entre a malha M e a malha C (das chaves anteriores)
+                #print ("ChavesComuns entre as malhas", i,"e", c,": ", ChavesComuns)
+                if ((chave in ChavesComuns) and (chaves[c] in ChavesComuns)):
+                 #   print ("A chave escolhida", chave, "e a chave", chaves[c], "estão nas chaves comuns")
+                  #  print ("NomesTodasChaves[",c,"]=",NomesTodasChaves[c])
+                   # print ("NomesTodasChaves[",i,"]=",NomesTodasChaves[i])
+                    ChavesNaoComunsMalhaM = [x for x in NomesTodasChaves_aux[i] if x not in ChavesComuns] #obtém as chaves que não são comuns entre a malha I e a malha da chave em comum
+                    potencias_aux = []
+                    #print ("ChavesNaoComuns entre as malhas",i,"e",c,ChavesNaoComunsMalhaM)
+                    
+                    for j in range (len(ChavesNaoComunsMalhaM)): 
+                        index_aux = NomesTodasChaves_aux[i].index(ChavesNaoComunsMalhaM[j]) #encontra o index das chaves não comuns dentro do vetor NomesChaves
+                        potencias_aux.append(potencias_ativas_trifasicas[i][index_aux]) #adiciona ao vetor potencias_aux os fluxos das chaves não comuns
+                    potencias_aux_sorted = sorted(potencias_aux, reverse=False)
+                
+                    menor_fluxo_chave_malha = potencias_aux_sorted[0] #pega o menor fluxo entre as chaves não comuns
+                    index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[i].index(menor_fluxo_chave_malha)
+                    chave = NomesTodasChaves_aux[i][index_menor_fluxo_chave_malha] #obtém no vetor NomesChaves a chave de menor fluxo
+                    #print ("Chave finalmente escolhida: ", chave)
+                    break
+            
+            chaves.append(chave)
+        
+        print ("S inicial: ", chaves) 
+        
+        return chaves
     
     def Ajuste_SistemaNBarras (N_Barras):
         
@@ -438,15 +505,15 @@ for i in range (N_Vezes):
                 
         NomesTodasChaves = Ajuste_SistemaNBarras (N_Barras_Sistema) #obtém o vetor com todas as chaves de todas as malhas (incluindo as chaves repetidas)
         
-        if (N_Barras_Sistema == 33):
+        S_ch = S_inicial_PFO(NomesTodasChaves)
+        """if (N_Barras_Sistema == 33):
             S_ch = ['S7','S28','S11','S17','S14']
             print ("Iniciando com a solução inicial Distância Elétrica pronta!")
         elif (N_Barras_Sistema == 69):
             S_ch = ['S58','S42','S14','S20','S26']
             print ("Iniciando com a solução inicial Distância Elétrica pronta!")
         elif (N_Barras_Sistema == 94):
-            S_ch = ["S96","S88","S91","S87","S89","S94","S95","S93","S92","S90","S84","S85","S86"]
-            #S_ch = ["S64","S72","S83","S12","S40","S34","S39","S92","S25","S16","S55","S7","S43"]
+            S_ch = ["S96","S88","S91","S87","S89","S94","S95","S93","S92","S90","S84","S85","S86"]"""
 
         NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
         FitS = FitnessIndividuo_ch(S_ch)
@@ -468,6 +535,7 @@ for i in range (N_Vezes):
             radialidade = 1
         else:
             print ("Sistema nao radial")
+            print ("num loops", objeto.num_loops_DSS())
             radialidade = 0
     
         print ("Fit inicial: ", FitS)
@@ -612,3 +680,4 @@ valores = [N_Vezes, N_Barras_Sistema, BTMax, T, MaxIter, solucoesotimas, media_p
 ws.append(valores)
     
 wb.save(r"C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Resultados_TS.xlsx")
+
