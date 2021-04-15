@@ -1,23 +1,23 @@
 """Especifique quantas vezes você quer que o programa rode:"""
-N_Vezes = 30
+N_Vezes = 100
 
 """Especifique o endereço do arquivo Opendss (dentro dos colchetes):"""
-address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\69_barras.dss]"
+address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
 
 """Especifique o número de barras do sistema que você quer trabalhar (33, 69 ou 94):"""
-N_Barras_Sistema = 69
+N_Barras_Sistema = 33
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
-BTMax = 200
+BTMax = 80
 
 """Especifique o tamanho da Lista Tabu"""
-T = 3
+T = 1
 
 """Número máximo de iterações"""
 MaxIter = 2000
 
 """Versão do código"""
-versao_codigo = "12.3"
+versao_codigo = "12.4"
 
 MelhoresFitsGerais = []
 MelhoresSGerais = []
@@ -40,76 +40,9 @@ for i in range (N_Vezes):
     import random 
     import copy
     import time
-   
+    import cmath
+    
     start = time.time()
-    
-    def S_inicial_PFO(NomesTodasChaves): 
-    
-        objeto.solve_DSS_snapshot()       
-        potencias_ativas_trifasicas = []
-        potencias_malha_aux = []
-        
-        NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves) 
-                
-        #essa parte obtém o fluxo de cada uma das linhas e armazena no vetor potencias_ativas_trifasicas
-        #é válido comentar que esse vetor corresponde com o NomesChaves
-        for i in range (len(NomesTodasChaves)): #for de cada uma das malhas
-            potencias_malha_aux = []
-            for j in range (len(NomesTodasChaves[i])): #for das chaves dentro de cada malha
-                objeto.dssSwtControl.Name = NomesTodasChaves_aux[i][j] #ativa o switch pelo nome da chave
-                switched_obj = objeto.dssSwtControl.SwitchedObj  #descobre o nome da linha referente
-                objeto.ativa_elemento(switched_obj) #ativa a determinada linha
-                b1, b2 = objeto.get_barras_elemento()
-                potencias = (objeto.get_potencias_elemento()) #pega todas as potencias da linha
-                potencias_malha_aux.append(abs(potencias[0] + potencias[2] + potencias[4])) #soma somente as potências ativas entrando na linha
-            potencias_ativas_trifasicas.append(potencias_malha_aux)
-            
-            
-        
-        #for i in range (len(NomesTodasChaves)):
-            #print ("=====Malha", i,"======")
-            #for j in range (len(NomesTodasChaves[i])):
-            #    print ("Potencia na chave", NomesTodasChaves[i][j],": ", potencias_ativas_trifasicas[i][j])
-        
-        chaves = []
-        for i in range (len(potencias_ativas_trifasicas)): #for de cada uma das malhas
-            potencias_sorted = sorted(potencias_ativas_trifasicas[i], reverse=False) #ordena os fluxos de potência de forma crescente para uma determinada malha
-            menor_fluxo_chave_malha = potencias_sorted[0]
-            index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[i].index(menor_fluxo_chave_malha) #obtém o index do menor fluxo no vetor original potencias_ativas_trifasicas
-            chave = NomesTodasChaves[i][index_menor_fluxo_chave_malha] #obtém a chave no vetor NomesTodasChaves
-            #print ("====Malha", i,"====")
-            #print ("Chave inicialmente escolhida:", chave)
-            c = 0
-            k = 0
-
-            #while c < len(chaves):
-            for c in range(len(chaves)):
-                ChavesComuns = list(set(NomesTodasChaves_aux[i]) & set(NomesTodasChaves_aux[c])) #chaves comuns entre a malha M e a malha C (das chaves anteriores)
-                #print ("ChavesComuns entre as malhas", i,"e", c,": ", ChavesComuns)
-                if ((chave in ChavesComuns) and (chaves[c] in ChavesComuns)):
-                 #   print ("A chave escolhida", chave, "e a chave", chaves[c], "estão nas chaves comuns")
-                  #  print ("NomesTodasChaves[",c,"]=",NomesTodasChaves[c])
-                   # print ("NomesTodasChaves[",i,"]=",NomesTodasChaves[i])
-                    ChavesNaoComunsMalhaM = [x for x in NomesTodasChaves_aux[i] if x not in ChavesComuns] #obtém as chaves que não são comuns entre a malha I e a malha da chave em comum
-                    potencias_aux = []
-                    #print ("ChavesNaoComuns entre as malhas",i,"e",c,ChavesNaoComunsMalhaM)
-                    
-                    for j in range (len(ChavesNaoComunsMalhaM)): 
-                        index_aux = NomesTodasChaves_aux[i].index(ChavesNaoComunsMalhaM[j]) #encontra o index das chaves não comuns dentro do vetor NomesChaves
-                        potencias_aux.append(potencias_ativas_trifasicas[i][index_aux]) #adiciona ao vetor potencias_aux os fluxos das chaves não comuns
-                    potencias_aux_sorted = sorted(potencias_aux, reverse=False)
-                
-                    menor_fluxo_chave_malha = potencias_aux_sorted[0] #pega o menor fluxo entre as chaves não comuns
-                    index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[i].index(menor_fluxo_chave_malha)
-                    chave = NomesTodasChaves_aux[i][index_menor_fluxo_chave_malha] #obtém no vetor NomesChaves a chave de menor fluxo
-                    #print ("Chave finalmente escolhida: ", chave)
-                    break
-            
-            chaves.append(chave)
-        
-        print ("S inicial: ", chaves) 
-        
-        return chaves
     
     def Ajuste_SistemaNBarras (N_Barras):
         
@@ -167,7 +100,94 @@ for i in range (N_Vezes):
             return 7309.25
         elif (N_Barras == 94):
             return 6581.8
-            
+        
+        
+    def Matriz_D ():
+    
+        Y = objeto.get_buildYmatrix()
+        #NumNodes = objeto.dssCircuit.NumNodes
+        tensoes_barras, carga_kW, carga_kvar, load_list = objeto.get_dados_barras()
+        #fase = 0
+        tensoes_barras_flatten = [item for sublist in tensoes_barras for item in sublist]
+        
+        tensoes_barras_aux = []
+        for i in range (len(tensoes_barras_flatten)-1):
+            if (i%2 == 0):
+               tensoes_barras_aux.append(cmath.rect(tensoes_barras_flatten[i], tensoes_barras_flatten[i+1]))
+        
+        
+        #print (tensoes_barras_aux)
+        """print ("len(tensoes_barras_aux)", len(tensoes_barras_aux))
+        print (carga_kW)
+        print (carga_kvar)
+        print ("len(carga_kW)", len(carga_kW))
+        print ("len(carga_kvar)", len(carga_kvar))
+        print ("NumNodes", NumNodes)"""
+        #consertar diferença entre NumNodes pois é 99 enquanto o array das tensões é de 33 pois as tensões das fases estão agrupadas
+        for i in range (len(tensoes_barras_aux)):
+            for j in range (len(tensoes_barras_aux)):
+                if (i==j):
+                    Y_L = (1/tensoes_barras_aux[i])*np.conjugate((complex(carga_kW[i],carga_kvar[i])/tensoes_barras_aux[i]))
+                    Y[i][j] = Y[i][j] + Y_L
+                    
+    
+        Z = np.linalg.inv(Y) 
+        D = abs(Z)
+        
+        return D 
+        
+    
+    #versão explicada na página 102 do caderninho preto
+    def S_inicial_DistanciaEletrica_v2 (NomesTodasChaves, S):
+
+    
+        AllBusNames = objeto.dssCircuit.AllBusNames
+        NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves) 
+        #distancias_eletricas_malhas = []
+        
+        S_copy = copy.copy(S)
+        chaves = []
+        
+        for i in range (len(S)):
+            chave_retirada = S.pop(i)    
+            FitnessIndividuo_ch(S)
+            S.insert(i, chave_retirada)
+            D = Matriz_D()
+            distancias_malha = []
+            for j in range (len(NomesTodasChaves_aux[i])): #for das chaves dentro de cada malha
+                objeto.dssSwtControl.Name = NomesTodasChaves_aux[i][j] #ativa o switch pelo nome da chave
+                switched_obj = objeto.dssSwtControl.SwitchedObj  #descobre o nome da linha referente
+                #num_linha = int(NomesTodasChaves_aux[i][j][1:]) #pega o numero da linha a que se refere
+                objeto.ativa_elemento(switched_obj) #ativa a determinada linha
+                b1, b2 = objeto.get_barras_elemento()
+                #print (objeto.dssCktElement.Name, b1, b2)
+                #print (b1)
+                #b1 = int(b1[1:])
+                #b2 = int(b2[1:])
+                index_b1 = AllBusNames.index(b1)
+                index_b2 = AllBusNames.index(b2)
+                #print ("distancia eletrica", D[3*b1, 3*b2])
+                distancias_malha.append(D[3*index_b1, 3*index_b2])
+        
+            D = []
+            k = 0
+            distancias_malha_sorted = []
+            distancias_malha_sorted  = sorted(distancias_malha, reverse=True)
+            while (1):
+                distancia_menor = distancias_malha_sorted [k]
+                index_maior_distancia = distancias_malha.index(distancia_menor)
+                chave = NomesTodasChaves[i][index_maior_distancia]
+                S_copy[i] = chave
+                FitnessIndividuo_ch(S_copy) 
+                
+                if (Radialidade()):
+                    chaves.append(chave)
+                    break
+                else:
+                    k += 1
+    
+        return chaves
+
     #esta função organiza as chaves levando em consideração uma solução S.
     #desta maneira as malhas/chaves são reorganizadas obrigando cada chave aberta de S a pertencer a apenas uma malha
     #desta maneira, após a reorganização cada malha terá uma chave aberta (um 0)
@@ -260,8 +280,6 @@ for i in range (N_Vezes):
             N = 1
         else:
             N = 3
-        
-        NomesChaves_aux = NomesChaves.copy()
                
         Vizinhos = []
         FitVizinhos = []
@@ -282,17 +300,16 @@ for i in range (N_Vezes):
                     direcao = -1*i
                 else:
                     direcao = 1*i
-                
-                #print (NomesChaves_aux)
-                index = NomesChaves_aux.index(Vizinho[v])
+        
+                index = NomesChaves.index(Vizinho[v])
                 novoindex = index + direcao
         
                 if (novoindex > N_Chaves_Malha_index[v]):
-                    Vizinho[v] = NomesChaves_aux[novoindex - N_Chaves_Malha[v]]
+                    Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
                 elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
-                    Vizinho[v] = NomesChaves_aux[N_Chaves_Malha_index[v]]
+                    Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
                 else:
-                    Vizinho[v] = NomesChaves_aux[novoindex]
+                    Vizinho[v] = NomesChaves[novoindex]
                         
                 fit = FitnessIndividuo_ch(Vizinho)
                 if Radialidade():
@@ -340,7 +357,7 @@ for i in range (N_Vezes):
             return 1 #radial
         else:
             return 0 #nao radial
-                
+        
                 
     class DSS():
     
@@ -366,7 +383,6 @@ for i in range (N_Vezes):
                 #self.dssEngine = self.dssObj.
                 #self.dssSwtControl = self.dssObj.SwtControls
                 self.dssTopology = self.dssCircuit.Topology
-                self.dssSwtControl = self.dssCircuit.SwtControls
         
         def n_loops_DSS(self):
             return self.dssTopology.NumLoops
@@ -428,9 +444,6 @@ for i in range (N_Vezes):
             
             # Retonar o nome do elemento ativado
             #return self.dssCktElement.Name
-            
-        def ativa_barra (self, nome_barra):
-            self.dssCircuit.SetActiveBus (nome_barra)
         
         def get_potencias_elemento(self):
             return self.dssCktElement.Powers
@@ -449,75 +462,33 @@ for i in range (N_Vezes):
         
         def get_names_lines(self):
             return self.dssLines.AllNames
-        
-        def get_buildYmatrix(self):
-            NumNodes = self.dssCircuit.NumNodes
-            Y = np.asarray(self.dssCircuit.SystemY).view(dtype=np.complex).reshape((NumNodes, NumNodes))
-            return Y
-        
-        def get_dados_barras (self):
-        
-            AllBusNames = self.dssCircuit.AllBusNames
-            #print (AllBusNames)
-            carga_kW = []
-            carga_kvar = []
-            load_list = []
-            tensoes_barras = []
-            for i in range (len(AllBusNames)):
-                self.dssCircuit.SetActiveBus (AllBusNames[i])
-                load_list.append (self.dssBus.LoadList)
-                tensoes_barras.append (self.dssBus.VMagAngle)
-                if (load_list[i][0]):
-                    self.dssCircuit.SetActiveElement(load_list[i][0])
-                    carga_kW.append (self.dssCktElement.Powers[0])
-                    carga_kW.append (self.dssCktElement.Powers[2])
-                    carga_kW.append (self.dssCktElement.Powers[4])
-                    carga_kvar.append (self.dssCktElement.Powers[1])
-                    carga_kvar.append (self.dssCktElement.Powers[3])
-                    carga_kvar.append (self.dssCktElement.Powers[5])
-                else:
-                    carga_kW.append (0)
-                    carga_kW.append (0)
-                    carga_kW.append (0)
-                    carga_kvar.append (0)
-                    carga_kvar.append (0)
-                    carga_kvar.append (0)
-                
-            #print (AllBusNames)
-            #print (load_list)
-            #print (carga_kW)
-            #print (carga_kvar)
-            #print (tensoes_barras)
-            
-            
-            return tensoes_barras, carga_kW, carga_kvar, load_list
                  
     
     if __name__ == "__main__":
-        print ("""Autor: Luiz Otávio""")
+        #print ("""Autor: Luiz Otávio""")
     
         # Criar um objeto da classe DSS
         # Inserir aqui o nome da pasta onde encontra-se o seu .dss
         # Caso haja espaços no endereço, colocar entre []
         objeto = DSS(address_opendss)
         objeto.compile_DSS()
-        print (u"Versão do OpenDSS: " + objeto.versao_DSS() + "\n")
+        #print (u"Versão do OpenDSS: " + objeto.versao_DSS() + "\n")
                 
         NomesTodasChaves = Ajuste_SistemaNBarras (N_Barras_Sistema) #obtém o vetor com todas as chaves de todas as malhas (incluindo as chaves repetidas)
         
-        S_ch = S_inicial_PFO(NomesTodasChaves)
-        """if (N_Barras_Sistema == 33):
-            S_ch = ['S7','S28','S11','S17','S14']
-            print ("Iniciando com a solução inicial Distância Elétrica pronta!")
+        if (N_Barras_Sistema == 33):
+            S_ch = ['S7', 'S28', 'S10', 'S15', 'S13']
+            #S_ch = ['S7', 'S28', 'S10', 'S15', 'S13']
         elif (N_Barras_Sistema == 69):
-            S_ch = ['S58','S42','S14','S20','S26']
-            print ("Iniciando com a solução inicial Distância Elétrica pronta!")
+            S_ch = ['S58', 'S42', 'S45', 'S17', 'S26']
         elif (N_Barras_Sistema == 94):
-            S_ch = ["S96","S88","S91","S87","S89","S94","S95","S93","S92","S90","S84","S85","S86"]"""
+            S_ch = ['S61', 'S76', 'S82', 'S69', 'S14', 'S94', 'S95', 'S37', 'S92', 'S90', 'S54', 'S6', 'S86']
+            
 
         NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
+               
         FitS = FitnessIndividuo_ch(S_ch)
-        print ("Configuração inicial: ", S_ch)
+        #print ("Configuração inicial: ", S_ch)
         
         BestFit = FitS
         BestS_ch = S_ch
@@ -525,20 +496,19 @@ for i in range (N_Vezes):
         
         status_tensao, min_tensao, max_tensao = Limites_tensao(Tensao_Sistema(N_Barras_Sistema))
         if (status_tensao == 1):
-            print ("Tensao nos limites")
+            #print ("Tensao nos limites")
             tensao = 1
         else:
-            print ("Tensao fora dos limites")
+            #print ("Tensao fora dos limites")
             tensao = 0
         if (Radialidade()):
-            print("Sistema radial")
+            #print("Sistema radial")
             radialidade = 1
         else:
-            print ("Sistema nao radial")
-            print ("num loops", objeto.num_loops_DSS())
+            #print ("Sistema nao radial")
             radialidade = 0
     
-        print ("Fit inicial: ", FitS)
+       # print ("Fit inicial: ", FitS)
         
         i = 0
         BestIter = 1        
@@ -568,8 +538,8 @@ for i in range (N_Vezes):
             #organiza o fit, os movimentos e os vizinhos de acordo com o fit (do melhor pro pior)    
             fitorg, vizorg_ch = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS_ch)
                         
-            #for j in range(len(vizorg_ch)):
-            #   print ("Vizinho", j, VizS_ch[j], "Fit:", FitVizS[j])
+            for j in range(len(vizorg_ch)):
+               print ("Vizinho", j, VizS_ch[j], "Fit:", FitVizS[j])
         
             #PARTE DA ESCOLHA DO NOVO S:
             if (fitorg[0] < BestFit): #função de aspiração: caso o melhor vizinho seja a melhor solução já encontrada mas estiver na LT, aceita mesmo assim 
@@ -624,17 +594,17 @@ for i in range (N_Vezes):
             vizorg_ch.clear()
         
         
-        print ("--------Resultado da rodada", k, "--------")
-        print ("BestIter: ", BestIter)
-        print ("Melhor configuração: ", BestS_ch, "Fit: ", BestFit)
-        if (tensao==1):
-            print ("Tensão: OK")
-        else:
-            print ("Tensão: erro")
-        if (radialidade==1):
-            print ("Radialidade: OK")
-        else:
-            print ("Radialidade: erro")
+       #print ("--------Resultado da rodada", k, "--------")
+        #print ("BestIter: ", BestIter)
+       #print ("Melhor configuração: ", BestS_ch, "Fit: ", BestFit)
+       #if (tensao==1):
+       #     print ("Tensão: OK")
+       # else:
+        #    print ("Tensão: erro")
+        #if (radialidade==1):
+        #    print ("Radialidade: OK")
+        #else:
+        #    print ("Radialidade: erro")
             
         if (tensao == 1 and radialidade == 1):
             k+=1
@@ -645,7 +615,7 @@ for i in range (N_Vezes):
             solucao_otima = TestaSolucaoOtima(BestS_ch, N_Barras_Sistema)
             if solucao_otima == 1:
                 solucoesotimas += 1
-                print ("Solução ótima encontrada!")
+                #print ("Solução ótima encontrada!")
             end = time.time()
             TempoGasto.append(end-start)
             
@@ -663,9 +633,22 @@ for i in range (len(MelhoresFitsGerais)):
     print ("Tensao minima: ", round (MinimasTensoesGerais[i],4), "pu")           
     print ("Tensão máxima: ", round (MaximasTensoesGerais[i],4), "pu")
     print ("Tempo gasto: ", TempoGasto[i])
-    
+
+BestFitEver = min(MelhoresFitsGerais)
+index_best = MelhoresFitsGerais.index(BestFitEver)
+BestSEver = MelhoresSGerais[index_best]
+
+WorstFitEver= max(MelhoresFitsGerais)
+index_worst = MelhoresFitsGerais.index(WorstFitEver)
+WorstSEver = MelhoresSGerais[index_worst]
+
+print ("O melhor S encontrado foi", BestSEver, "com o fit:", BestFitEver)
+print ("O pior S encontrado foi", WorstSEver, "com o fit:", WorstFitEver)
+        
 media_perdas = sum(MelhoresFitsGerais)/len(MelhoresFitsGerais)
 desvio_padrao = np.std(MelhoresFitsGerais) 
+
+rendimento = solucoesotimas/len(MelhoresFitsGerais)
 
 print ("Média de perdas para",N_Vezes,"configurações obtidas para sistema de", 
        N_Barras_Sistema, "barras: ", round(media_perdas,3))
@@ -675,9 +658,9 @@ print ("O sistema obteve", solucoesotimas,"soluções ótimas para", len(Melhore
 print ("Tempo gasto total: ", sum(TempoGasto))
 
 valores = [N_Vezes, N_Barras_Sistema, BTMax, T, MaxIter, solucoesotimas, media_perdas, desvio_padrao,
-           sum(TempoGasto), sum(TempoGasto)/len(TempoGasto), versao_codigo]
+           sum(TempoGasto), sum(TempoGasto)/len(TempoGasto), versao_codigo, rendimento ,str(BestSEver), 
+           BestFitEver, str(WorstSEver), WorstFitEver]
 
 ws.append(valores)
     
 wb.save(r"C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Resultados_TS.xlsx")
-
