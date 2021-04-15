@@ -1,23 +1,23 @@
 """Especifique quantas vezes você quer que o programa rode:"""
-N_Vezes = 10
+N_Vezes = 30
 
 """Especifique o endereço do arquivo Opendss (dentro dos colchetes):"""
-address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\94_nos.dss]"
+address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\69_barras.dss]"
 
 """Especifique o número de barras do sistema que você quer trabalhar (33, 69 ou 94):"""
-N_Barras_Sistema = 94
+N_Barras_Sistema = 69
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
-BTMax = 500
+BTMax = 250
 
 """Especifique o tamanho da Lista Tabu"""
 T = 1
 
 """Número máximo de iterações"""
-MaxIter = 7000
+MaxIter = 2000
 
 """Versão do código"""
-versao_codigo = "12.1"
+versao_codigo = "12.2"
 
 MelhoresFitsGerais = []
 MelhoresSGerais = []
@@ -100,57 +100,7 @@ for i in range (N_Vezes):
             return 7309.25
         elif (N_Barras == 94):
             return 6581.8
-        
-    
-    #esta função roda o sistema com todas as chaves fechadas e então seleciona as chaves com
-    #menor fluxo de potência em cada malha; a função observa tambem caso uma chave seja
-    #a chave de menor fluxo de duas malhas; caso afirmativo, a chave é selecionada para uma
-    #malha e na outra malha é selecionada a chave que tem menor fluxo que não seja em comum com
-    #a primeira malha
-    def S_inicial(NomesTodasChaves): 
-        
-        objeto.solve_DSS_snapshot()       
-        potencias_ativas_trifasicas = []
-        potencias_malha_aux = []
-        
-        #essa parte obtém o fluxo de cada uma das linhas e armazena no vetor potencias_ativas_trifasicas
-        #é válido comentar que esse vetor corresponde com o NomesChaves
-        for i in range (len(NomesTodasChaves)): #for de cada uma das malhas
-            potencias_malha_aux = []
-            for j in range (len(NomesTodasChaves[i])): #for das chaves dentro de cada malha
-                num_linha = int(NomesTodasChaves[i][j][1:]) #pega o numero da linha a que se refere
-                objeto.ativa_elemento("Line.L"+str(num_linha)) #ativa a determinada linha
-                potencias = (objeto.get_potencias_elemento()) #pega todas as potencias da linha
-                potencias_malha_aux.append(abs(potencias[0] + potencias[2] + potencias[4])) #soma somente as potências ativas entrando na linha
-            potencias_ativas_trifasicas.append(potencias_malha_aux)
-        
-        S = []
-        for i in range (len(potencias_ativas_trifasicas)): #for de cada uma das malhas
-            potencias_sorted = sorted(potencias_ativas_trifasicas[i], reverse=False) #ordena os fluxos de potência de forma crescente para uma determinada malha
-            menor_fluxo_chave_malha = potencias_sorted[0]
-            index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[i].index(menor_fluxo_chave_malha) #obtém o index do menor fluxo no vetor original potencias_ativas_trifasicas
-            chave = NomesTodasChaves[i][index_menor_fluxo_chave_malha] #obtém a chave no vetor NomesTodasChaves
             
-            if (chave in S): #se a chave já tiver sido escolhida 
-                index_malhacomum = S.index(chave) #descobre a malha que a chave selecionada está em comum
-                ChavesComuns = [value for value in NomesTodasChaves[i] if value in NomesTodasChaves[index_malhacomum]] #obtém as chaves em comum entre a malha I e a malha da chave em comum
-                ChavesNaoComunsMalhai = [x for x in NomesTodasChaves[i] if x not in ChavesComuns] #obtém as chaves que não são comuns entre a malha I e a malha da chave em comum
-                potencias_aux = []
-                for j in range (len(ChavesNaoComunsMalhai)): 
-                    index_aux = NomesTodasChaves[i].index(ChavesNaoComunsMalhai[j]) #encontra o index das chaves não comuns dentro do vetor NomesChaves
-                    potencias_aux.append(potencias_ativas_trifasicas[i][index_aux]) #adiciona ao vetor potencias_aux os fluxos das chaves não comuns
-                    potencias_aux_sorted = sorted(potencias_aux, reverse=False) #ordena as potencias em ordem crescente
-                    
-                menor_fluxo_chave_malha = potencias_aux_sorted[0] #pega o menor fluxo entre as chaves não comuns
-                index_menor_fluxo_chave_malha = potencias_ativas_trifasicas[i].index(menor_fluxo_chave_malha)
-                chave = NomesTodasChaves[i][index_menor_fluxo_chave_malha] #obtém no vetor NomesTodasChaves a chave de menor fluxo
-            
-            S.append(chave)
-        
-        print ("S inicial: ", S)        
-        
-        return S
-    
     #esta função organiza as chaves levando em consideração uma solução S.
     #desta maneira as malhas/chaves são reorganizadas obrigando cada chave aberta de S a pertencer a apenas uma malha
     #desta maneira, após a reorganização cada malha terá uma chave aberta (um 0)
@@ -323,111 +273,7 @@ for i in range (N_Vezes):
             return 1 #radial
         else:
             return 0 #nao radial
-        
-    def Matriz_D ():
-        
-        Y = objeto.get_buildYmatrix()
-        NumNodes = objeto.dssCircuit.NumNodes
-        tensoes_barras, carga_kW, carga_kvar, load_list = objeto.get_dados_barras()
-        fase = 0
-        tensoes_barras_flatten = [item for sublist in tensoes_barras for item in sublist]
-        
-        tensoes_barras_aux = []
-        for i in range (len(tensoes_barras_flatten)-1):
-            if (i%2 == 0):
-               tensoes_barras_aux.append(cmath.rect(tensoes_barras_flatten[i], tensoes_barras_flatten[i+1]))
-        
-        
-        #print (tensoes_barras_aux)
-        """print ("len(tensoes_barras_aux)", len(tensoes_barras_aux))
-        print (carga_kW)
-        print (carga_kvar)
-        print ("len(carga_kW)", len(carga_kW))
-        print ("len(carga_kvar)", len(carga_kvar))
-        print ("NumNodes", NumNodes)"""
-        #consertar diferença entre NumNodes pois é 99 enquanto o array das tensões é de 33 pois as tensões das fases estão agrupadas
-        for i in range (len(tensoes_barras_aux)):
-            for j in range (len(tensoes_barras_aux)):
-                if (i==j):
-                    Y_L = (1/tensoes_barras_aux[i])*np.conjugate((complex(carga_kW[i],carga_kvar[i])/tensoes_barras_aux[i]))
-                    Y[i][j] = Y[i][j] + Y_L
-                    
-    
-        Z = np.linalg.inv(Y) 
-        D = abs(Z)
-        
-        return D 
-
-
-    def S_inicial_DistanciaEletrica (NomesTodasChaves):
-    
-        #objeto.solve_DSS_snapshot()  
-        
-        D = Matriz_D()
-        
-        NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves) 
-        distancias_eletricas_malhas = []
-            
-        #objeto.dssSwtControl.Name = "s33"
-        #switched_obj = objeto.dssSwtControl.SwitchedObj 
-        #print (switched_obj)
-        
-        AllBusNames = objeto.dssCircuit.AllBusNames
-        
-        
-        for i in range (len(NomesTodasChaves_aux)): #for de cada uma das malhas
-            distancias_aux = []
-            for j in range (len(NomesTodasChaves_aux[i])): #for das chaves dentro de cada malha
-                objeto.dssSwtControl.Name = NomesTodasChaves_aux[i][j] #ativa o switch pelo nome da chave
-                switched_obj = objeto.dssSwtControl.SwitchedObj  #descobre o nome da linha referente
-                #num_linha = int(NomesTodasChaves_aux[i][j][1:]) #pega o numero da linha a que se refere
-                objeto.ativa_elemento(switched_obj) #ativa a determinada linha
-                b1, b2 = objeto.get_barras_elemento()
-                #print (objeto.dssCktElement.Name, b1, b2)
-                #print (b1)
-                #b1 = int(b1[1:])
-                #b2 = int(b2[1:])
-                index_b1 = AllBusNames.index(b1)
-                index_b2 = AllBusNames.index(b2)
-                #print ("distancia eletrica", D[3*b1, 3*b2])
-                distancias_aux.append(D[3*index_b1, 3*index_b2])
-            distancias_eletricas_malhas.append(distancias_aux)
-            
-        chaves = []
-        for i in range (len(distancias_eletricas_malhas)):
-            distancia_minima = max(distancias_eletricas_malhas[i])
-            index = distancias_eletricas_malhas[i].index(distancia_minima)
-            chave = NomesTodasChaves[i][index]
-            #print ("A chave escolhida inicialmente na malha",i, "foi", chave)
-            
-            for c in range(len(chaves)):
-                ChavesComuns = list(set(NomesTodasChaves_aux[i]) & set(NomesTodasChaves_aux[c])) #chaves comuns entre a malha M e a malha C (das chaves anteriores)
-                #print ("ChavesComuns entre as malhas", i, "e", c,": ", ChavesComuns)
-                if ((chave in ChavesComuns) and (chaves[c] in ChavesComuns)):
-                   # print ("chave: ", chave)
-                    #print ("chaves[c]: ", chaves[c])
-                    ChavesNaoComunsMalhaM = [x for x in NomesTodasChaves_aux[i] if x not in ChavesComuns] #obtém as chaves que não são comuns entre a malha I e a malha da chave em comum
-                   # print ("NomesTodasChaves_aux[", i, "]: ", NomesTodasChaves_aux[i])
-                   # print ("NomesTodasChaves_aux[", c, "]: ", NomesTodasChaves_aux[c])
-                   # print ("ChavesNaoComunsMalhaM: ", ChavesNaoComunsMalhaM)
-                    distancias_aux = []
-                    for j in range (len(ChavesNaoComunsMalhaM)): 
-                        index_aux = NomesTodasChaves_aux[i].index(ChavesNaoComunsMalhaM[j]) #encontra o index das chaves não comuns dentro do vetor NomesChaves
-                        distancias_aux.append(distancias_eletricas_malhas[i][index_aux]) #adiciona ao vetor potencias_aux os fluxos das chaves não comuns
-                        distancias_aux_sorted = sorted(distancias_aux, reverse=True)
-                    
-                    menor_fluxo_chave_malha = distancias_aux_sorted[0] #pega o menor fluxo entre as chaves não comuns
-                    index_menor_fluxo_chave_malha = distancias_eletricas_malhas[i].index(menor_fluxo_chave_malha)
-                    chave = NomesTodasChaves_aux[i][index_menor_fluxo_chave_malha] #obtém no vetor NomesChaves a chave de menor fluxo
-                  #  print ("nova chave", chave)
-                    break
-        
-            chaves.append(chave)
-        
-        print (chaves)  
-    
-        return chaves   
-        
+                
                 
     class DSS():
     
@@ -592,18 +438,17 @@ for i in range (N_Vezes):
                 
         NomesTodasChaves = Ajuste_SistemaNBarras (N_Barras_Sistema) #obtém o vetor com todas as chaves de todas as malhas (incluindo as chaves repetidas)
         
-        #S_ch = S_inicial(NomesTodasChaves) #obtém o S inicial pelo método do menor fluxo nas malhas
         if (N_Barras_Sistema == 33):
-            S_ch = ['S33','S37','S35','S36','S34']
+            S_ch = ['S7','S28','S11','S17','S14']
+            print ("Iniciando com a solução inicial Distância Elétrica pronta!")
         elif (N_Barras_Sistema == 69):
-            S_ch = ['S72','S69','S71','S70','S73']
+            S_ch = ['S58','S42','S14','S20','S26']
+            print ("Iniciando com a solução inicial Distância Elétrica pronta!")
         elif (N_Barras_Sistema == 94):
             S_ch = ["S96","S88","S91","S87","S89","S94","S95","S93","S92","S90","S84","S85","S86"]
+            #S_ch = ["S64","S72","S83","S12","S40","S34","S39","S92","S25","S16","S55","S7","S43"]
 
         NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
-        FitS = FitnessIndividuo_ch(S_ch)
-        S_ch = S_inicial_DistanciaEletrica(NomesTodasChaves)
-        NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch(NomesTodasChaves, S_ch)
         FitS = FitnessIndividuo_ch(S_ch)
         print ("Configuração inicial: ", S_ch)
         
@@ -646,12 +491,11 @@ for i in range (N_Vezes):
             
             #vai adicionando os movimentos de cada S selecionado à lista_tabu_completa;
             #conforme ela vai preenchendo os movimentos mais antigos vão sendo eliminados
-            if (T!=0):
-                if (len(lista_tabu_completa)==T): 
-                    lista_tabu_completa.pop(0)
-                    lista_tabu_completa.append(lista_tabu)
-                else:
-                    lista_tabu_completa.append(lista_tabu)
+            if (len(lista_tabu_completa)==T): 
+                lista_tabu_completa.pop(0)
+                lista_tabu_completa.append(lista_tabu)
+            else:
+                lista_tabu_completa.append(lista_tabu)
                 
             #organiza o fit, os movimentos e os vizinhos de acordo com o fit (do melhor pro pior)    
             fitorg, vizorg_ch = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS_ch)
@@ -664,22 +508,15 @@ for i in range (N_Vezes):
                 S_ch = vizorg_ch[0]
                 fit_novo_S = fitorg[0]
                 novo_tabu = S_ch
-            else: 
-                #caso esteja na lista tabu, entra pro processo de escolha
-                if (T!=0):
-                    lista_tabu_completa_flat = [item for sublist in lista_tabu_completa for item in sublist]
-                    for m in range (len(vizorg_ch)):
-                        if (any(n in lista_tabu_completa_flat for n in vizorg_ch[m]) == False):
-                            #print ("O vizinho escolhido foi o", m)
-                            S_ch = vizorg_ch[m]
-                            fit_novo_S = fitorg[m]
-                            novo_tabu = S_ch
-                            break
-                else:
-                    S_ch = vizorg_ch[0]
-                    fit_novo_S = fitorg[0]
-                    novo_tabu = S_ch
-                    
+            else: #caso esteja na lista tabu, entra pro processo de escolha
+                lista_tabu_completa_flat = [item for sublist in lista_tabu_completa for item in sublist]
+                for m in range (len(vizorg_ch)):
+                    if (any(n in lista_tabu_completa_flat for n in vizorg_ch[m]) == False):
+                        #print ("O vizinho escolhido foi o", m)
+                        S_ch = vizorg_ch[m]
+                        fit_novo_S = fitorg[m]
+                        novo_tabu = S_ch
+                        break
             
             #se o fit do novo S for o melhor já encontrado:
             if (fit_novo_S < BestFit):
