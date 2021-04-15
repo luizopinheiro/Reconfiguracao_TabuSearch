@@ -1,0 +1,287 @@
+clear
+Set DefaultBaseFrequency=60
+
+New Circuit.Master BasekV=11.4  Bus1=Sub  pu=1.0  MVASC3=100000000   MVASC1 =100000000
+
+Set Voltagebases =[11.4]
+
+Calcvoltagebases
+
+Set maxiterations = 100
+
+New line.f7001  phases=3  switch=yes   Bus1=Sub   Bus2=B7001
+New line.f7002  phases=3  switch=yes   Bus1=Sub   Bus2=B7002
+New line.f7003  phases=3  switch=yes   Bus1=Sub   Bus2=B7003
+New line.f7004  phases=3  switch=yes   Bus1=Sub   Bus2=B7004
+New line.f7005  phases=3  switch=yes   Bus1=Sub   Bus2=B7005
+New line.f7006  phases=3  switch=yes   Bus1=Sub   Bus2=B7006
+New line.f7007  phases=3  switch=yes   Bus1=Sub   Bus2=B7007
+New line.f7008  phases=3  switch=yes   Bus1=Sub   Bus2=B7008
+New line.f7009  phases=3  switch=yes   Bus1=Sub   Bus2=B7009
+New line.f7010  phases=3  switch=yes   Bus1=Sub   Bus2=B7010
+New line.f7011  phases=3  switch=yes   Bus1=Sub   Bus2=B7011
+
+New line.7001-1  phases=3   Bus1=B7001   Bus2=B1   R1=0.1944   X1=0.6624  emergamps=10000   Length=1
+New line.1-2  phases=3   Bus1=B1   Bus2=B2   R1=0.2096   X1=0.4304  emergamps=10000   Length=1
+New line.2-3  phases=3   Bus1=B2   Bus2=B3   R1=0.2358   X1=0.4842  emergamps=10000   Length=1
+New line.3-4  phases=3   Bus1=B3   Bus2=B4   R1=0.0917   X1=0.1883  emergamps=10000   Length=1
+New line.4-5  phases=3   Bus1=B4   Bus2=B5   R1=0.2096   X1=0.4304  emergamps=10000   Length=1
+New line.5-6  phases=3   Bus1=B5   Bus2=B6   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+New line.6-7  phases=3   Bus1=B6   Bus2=B7   R1=0.0405   X1=0.138  emergamps=10000   Length=1
+New line.7-8  phases=3   Bus1=B7   Bus2=B8   R1=0.1048   X1=0.2152  emergamps=10000   Length=1
+New line.7-9  phases=3   Bus1=B7   Bus2=B9   R1=0.2358   X1=0.4842  emergamps=10000   Length=1
+New line.7-10  phases=3   Bus1=B7   Bus2=B10   R1=0.1048   X1=0.2152  emergamps=10000   Length=1
+New line.7002-11  phases=3   Bus1=B7002   Bus2=B11   R1=0.0786   X1=0.1614  emergamps=10000   Length=1
+New line.11-12  phases=3   Bus1=B11   Bus2=B12   R1=0.3406   X1=0.6944  emergamps=10000   Length=1
+New line.12-13  phases=3   Bus1=B12   Bus2=B13   R1=0.0262   X1=0.0538  emergamps=10000   Length=1
+New line.12-14  phases=3   Bus1=B12   Bus2=B14   R1=0.0786   X1=0.1614  emergamps=10000   Length=1
+New line.7003-15  phases=3   Bus1=B7003   Bus2=B15   R1=0.1134   X1=0.3864  emergamps=10000   Length=1
+New line.15-16  phases=3   Bus1=B15   Bus2=B16   R1=0.0524   X1=0.1076  emergamps=10000   Length=1
+New line.16-17  phases=3   Bus1=B16   Bus2=B17   R1=0.0524   X1=0.1076  emergamps=10000   Length=1
+New line.17-18  phases=3   Bus1=B17   Bus2=B18   R1=0.1572   X1=0.3228  emergamps=10000   Length=1
+New line.18-19  phases=3   Bus1=B18   Bus2=B19   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+New line.19-20  phases=3   Bus1=B19   Bus2=B20   R1=0.1703   X1=0.3497  emergamps=10000   Length=1
+New line.20-21  phases=3   Bus1=B20   Bus2=B21   R1=0.2358   X1=0.4842  emergamps=10000   Length=1
+New line.21-22  phases=3   Bus1=B21   Bus2=B22   R1=0.1572   X1=0.3228  emergamps=10000   Length=1
+New line.21-23  phases=3   Bus1=B21   Bus2=B23   R1=0.1965   X1=0.4035  emergamps=10000   Length=1
+New line.23-24  phases=3   Bus1=B23   Bus2=B24   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.7004-25  phases=3   Bus1=B7004   Bus2=B25   R1=0.0567   X1=0.1932  emergamps=10000   Length=1
+New line.25-26  phases=3   Bus1=B25   Bus2=B26   R1=0.1048   X1=0.2152  emergamps=10000   Length=1
+New line.26-27  phases=3   Bus1=B26   Bus2=B27   R1=0.2489   X1=0.5111  emergamps=10000   Length=1
+New line.27-28  phases=3   Bus1=B27   Bus2=B28   R1=0.0486   X1=0.1656  emergamps=10000   Length=1
+New line.28-29  phases=3   Bus1=B28   Bus2=B29   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.7005-30  phases=3   Bus1=B7005   Bus2=B30   R1=0.1965   X1=0.396  emergamps=10000   Length=1
+New line.30-31  phases=3   Bus1=B30   Bus2=B31   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.31-32  phases=3   Bus1=B31   Bus2=B32   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.32-33  phases=3   Bus1=B32   Bus2=B33   R1=0.0262   X1=0.0538  emergamps=10000   Length=1
+New line.33-34  phases=3   Bus1=B33   Bus2=B34   R1=0.1703   X1=0.3497  emergamps=10000   Length=1
+New line.34-35  phases=3   Bus1=B34   Bus2=B35   R1=0.0524   X1=0.1076  emergamps=10000   Length=1
+New line.35-36  phases=3   Bus1=B35   Bus2=B36   R1=0.4978   X1=1.0222  emergamps=10000   Length=1
+New line.36-37  phases=3   Bus1=B36   Bus2=B37   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+New line.37-38  phases=3   Bus1=B37   Bus2=B38   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+New line.38-39  phases=3   Bus1=B38   Bus2=B39   R1=0.0786   X1=0.1614  emergamps=10000   Length=1
+New line.39-40  phases=3   Bus1=B39   Bus2=B40   R1=0.2096   X1=0.4304  emergamps=10000   Length=1
+New line.38-41  phases=3   Bus1=B38   Bus2=B41   R1=0.1965   X1=0.4035  emergamps=10000   Length=1
+New line.41-42  phases=3   Bus1=B41   Bus2=B42   R1=0.2096   X1=0.4304  emergamps=10000   Length=1
+New line.7006-43  phases=3   Bus1=B7006   Bus2=B43   R1=0.0486   X1=0.1656  emergamps=10000   Length=1
+New line.43-44  phases=3   Bus1=B43   Bus2=B44   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+New line.44-45  phases=3   Bus1=B44   Bus2=B45   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.45-46  phases=3   Bus1=B45   Bus2=B46   R1=0.2358   X1=0.4842  emergamps=10000   Length=1
+New line.7007-47  phases=3   Bus1=B7007   Bus2=B47   R1=0.243   X1=0.828  emergamps=10000   Length=1
+New line.47-48  phases=3   Bus1=B47   Bus2=B48   R1=0.0655   X1=0.1345  emergamps=10000   Length=1
+New line.48-49  phases=3   Bus1=B48   Bus2=B49   R1=0.0655   X1=0.1345  emergamps=10000   Length=1
+New line.49-50  phases=3   Bus1=B49   Bus2=B50   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+New line.50-51  phases=3   Bus1=B50   Bus2=B51   R1=0.0786   X1=0.1614  emergamps=10000   Length=1
+New line.51-52  phases=3   Bus1=B51   Bus2=B52   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+New line.52-53  phases=3   Bus1=B52   Bus2=B53   R1=0.0786   X1=0.1614  emergamps=10000   Length=1
+New line.53-54  phases=3   Bus1=B53   Bus2=B54   R1=0.0524   X1=0.1076  emergamps=10000   Length=1
+New line.54-55  phases=3   Bus1=B54   Bus2=B55   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.7008-56  phases=3   Bus1=B7008   Bus2=B56   R1=0.2268   X1=0.7728  emergamps=10000   Length=1
+New line.56-57  phases=3   Bus1=B56   Bus2=B57   R1=0.5371   X1=1.1029  emergamps=10000   Length=1
+New line.57-58  phases=3   Bus1=B57   Bus2=B58   R1=0.0524   X1=0.1076  emergamps=10000   Length=1
+New line.58-59  phases=3   Bus1=B58   Bus2=B59   R1=0.0405   X1=0.138  emergamps=10000   Length=1
+New line.59-60  phases=3   Bus1=B59   Bus2=B60   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+New line.60-61  phases=3   Bus1=B60   Bus2=B61   R1=0.0262   X1=0.0538  emergamps=10000   Length=1
+New line.61-62  phases=3   Bus1=B61   Bus2=B62   R1=0.1048   X1=0.2152  emergamps=10000   Length=1
+New line.62-63  phases=3   Bus1=B62   Bus2=B63   R1=0.2358   X1=0.4842  emergamps=10000   Length=1
+New line.63-64  phases=3   Bus1=B63   Bus2=B64   R1=0.0243   X1=0.0828  emergamps=10000   Length=1
+New line.7009-65  phases=3   Bus1=B7009   Bus2=B65   R1=0.0486   X1=0.1656  emergamps=10000   Length=1
+New line.65-66  phases=3   Bus1=B65   Bus2=B66   R1=0.1703   X1=0.3497  emergamps=10000   Length=1
+New line.66-67  phases=3   Bus1=B66   Bus2=B67   R1=0.1215   X1=0.414  emergamps=10000   Length=1
+New line.67-68  phases=3   Bus1=B67   Bus2=B68   R1=0.2187   X1=0.7452  emergamps=10000   Length=1
+New line.68-69  phases=3   Bus1=B68   Bus2=B69   R1=0.0486   X1=0.1656  emergamps=10000   Length=1
+New line.69-70  phases=3   Bus1=B69   Bus2=B70   R1=0.0729   X1=0.2484  emergamps=10000   Length=1
+New line.70-71  phases=3   Bus1=B70   Bus2=B71   R1=0.0567   X1=0.1932  emergamps=10000   Length=1
+New line.71-72  phases=3   Bus1=B71   Bus2=B72   R1=0.0262   X1=0.0528  emergamps=10000   Length=1
+New line.7010-73  phases=3   Bus1=B7010   Bus2=B73   R1=0.324   X1=1.1024  emergamps=10000   Length=1
+New line.73-74  phases=3   Bus1=B73   Bus2=B74   R1=0.0324   X1=0.1104  emergamps=10000   Length=1
+New line.74-75  phases=3   Bus1=B74   Bus2=B75   R1=0.0567   X1=0.1932  emergamps=10000   Length=1
+New line.75-76  phases=3   Bus1=B75   Bus2=B76   R1=0.0486   X1=0.1656  emergamps=10000   Length=1
+New line.7011-77  phases=3   Bus1=B7011   Bus2=B77   R1=0.2511   X1=0.8556  emergamps=10000   Length=1
+New line.77-78  phases=3   Bus1=B77   Bus2=B78   R1=0.1296   X1=0.4416  emergamps=10000   Length=1
+New line.78-79  phases=3   Bus1=B78   Bus2=B79   R1=0.0486   X1=0.1656  emergamps=10000   Length=1
+New line.79-80  phases=3   Bus1=B79   Bus2=B80   R1=0.131   X1=0.264  emergamps=10000   Length=1
+New line.80-81  phases=3   Bus1=B80   Bus2=B81   R1=0.131   X1=0.264  emergamps=10000   Length=1
+New line.81-82  phases=3   Bus1=B81   Bus2=B82   R1=0.0917   X1=0.1883  emergamps=10000   Length=1
+New line.82-83  phases=3   Bus1=B82   Bus2=B83   R1=0.3144   X1=0.6456  emergamps=10000   Length=1
+New line.5-55  phases=3   Bus1=B5   Bus2=B55   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.7-60  phases=3   Bus1=B7   Bus2=B60   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.11-43  phases=3   Bus1=B11   Bus2=B43   R1=0.131   X1=0.269  emergamps=10000   Length=1
+New line.12-72  phases=3   Bus1=B12   Bus2=B72   R1=0.3406   X1=0.6994  emergamps=10000   Length=1
+New line.13-76  phases=3   Bus1=B13   Bus2=B76   R1=0.4585   X1=0.9415  emergamps=10000   Length=1
+New line.14-18  phases=3   Bus1=B14   Bus2=B18   R1=0.5371   X1=1.0824  emergamps=10000   Length=1
+New line.16-26  phases=3   Bus1=B16   Bus2=B26   R1=0.0917   X1=0.1883  emergamps=10000   Length=1
+New line.20-83  phases=3   Bus1=B20   Bus2=B83   R1=0.0786   X1=0.1614  emergamps=10000   Length=1
+New line.28-32  phases=3   Bus1=B28   Bus2=B32   R1=0.0524   X1=0.1076  emergamps=10000   Length=1
+New line.29-39  phases=3   Bus1=B29   Bus2=B39   R1=0.0786   X1=0.1614  emergamps=10000   Length=1
+New line.34-46  phases=3   Bus1=B34   Bus2=B46   R1=0.0262   X1=0.0538  emergamps=10000   Length=1
+New line.40-42  phases=3   Bus1=B40   Bus2=B42   R1=0.1965   X1=0.4035  emergamps=10000   Length=1
+New line.53-64  phases=3   Bus1=B53   Bus2=B64   R1=0.0393   X1=0.0807  emergamps=10000   Length=1
+
+New Load.B2   phases=3   Bus1=B2   kV=11.4   kW=100   kvar=50   vminpu=0.9    vmaxpu=1.1
+New Load.B3   phases=3   Bus1=B3   kV=11.4   kW=300   kvar=200   vminpu=0.9    vmaxpu=1.1
+New Load.B4   phases=3   Bus1=B4   kV=11.4   kW=350   kvar=250   vminpu=0.9    vmaxpu=1.1
+New Load.B5   phases=3   Bus1=B5   kV=11.4   kW=220   kvar=100   vminpu=0.9    vmaxpu=1.1
+New Load.B6   phases=3   Bus1=B6   kV=11.4   kW=1100   kvar=800   vminpu=0.9    vmaxpu=1.1
+New Load.B7   phases=3   Bus1=B7   kV=11.4   kW=400   kvar=320   vminpu=0.9    vmaxpu=1.1
+New Load.B8   phases=3   Bus1=B8   kV=11.4   kW=300   kvar=200   vminpu=0.9    vmaxpu=1.1
+New Load.B9   phases=3   Bus1=B9   kV=11.4   kW=300   kvar=230   vminpu=0.9    vmaxpu=1.1
+New Load.B10   phases=3   Bus1=B10   kV=11.4   kW=300   kvar=260   vminpu=0.9    vmaxpu=1.1
+New Load.B12   phases=3   Bus1=B12   kV=11.4   kW=1200   kvar=800   vminpu=0.9    vmaxpu=1.1
+New Load.B13   phases=3   Bus1=B13   kV=11.4   kW=800   kvar=600   vminpu=0.9    vmaxpu=1.1
+New Load.B14   phases=3   Bus1=B14   kV=11.4   kW=700   kvar=500   vminpu=0.9    vmaxpu=1.1
+New Load.B16   phases=3   Bus1=B16   kV=11.4   kW=300   kvar=150   vminpu=0.9    vmaxpu=1.1
+New Load.B17   phases=3   Bus1=B17   kV=11.4   kW=500   kvar=350   vminpu=0.9    vmaxpu=1.1
+New Load.B18   phases=3   Bus1=B18   kV=11.4   kW=700   kvar=400   vminpu=0.9    vmaxpu=1.1
+New Load.B19   phases=3   Bus1=B19   kV=11.4   kW=1200   kvar=1000   vminpu=0.9    vmaxpu=1.1
+New Load.B20   phases=3   Bus1=B20   kV=11.4   kW=300   kvar=300   vminpu=0.9    vmaxpu=1.1
+New Load.B21   phases=3   Bus1=B21   kV=11.4   kW=400   kvar=350   vminpu=0.9    vmaxpu=1.1
+New Load.B22   phases=3   Bus1=B22   kV=11.4   kW=50   kvar=20   vminpu=0.9    vmaxpu=1.1
+New Load.B23   phases=3   Bus1=B23   kV=11.4   kW=50   kvar=20   vminpu=0.9    vmaxpu=1.1
+New Load.B24   phases=3   Bus1=B24   kV=11.4   kW=50   kvar=10   vminpu=0.9    vmaxpu=1.1
+New Load.B25   phases=3   Bus1=B25   kV=11.4   kW=50   kvar=30   vminpu=0.9    vmaxpu=1.1
+New Load.B26   phases=3   Bus1=B26   kV=11.4   kW=100   kvar=60   vminpu=0.9    vmaxpu=1.1
+New Load.B27   phases=3   Bus1=B27   kV=11.4   kW=100   kvar=70   vminpu=0.9    vmaxpu=1.1
+New Load.B28   phases=3   Bus1=B28   kV=11.4   kW=1800   kvar=1300   vminpu=0.9    vmaxpu=1.1
+New Load.B29   phases=3   Bus1=B29   kV=11.4   kW=200   kvar=120   vminpu=0.9    vmaxpu=1.1
+New Load.B31   phases=3   Bus1=B31   kV=11.4   kW=1800   kvar=1600   vminpu=0.9    vmaxpu=1.1
+New Load.B32   phases=3   Bus1=B32   kV=11.4   kW=200   kvar=150   vminpu=0.9    vmaxpu=1.1
+New Load.B33   phases=3   Bus1=B33   kV=11.4   kW=200   kvar=100   vminpu=0.9    vmaxpu=1.1
+New Load.B34   phases=3   Bus1=B34   kV=11.4   kW=800   kvar=600   vminpu=0.9    vmaxpu=1.1
+New Load.B35   phases=3   Bus1=B35   kV=11.4   kW=100   kvar=60   vminpu=0.9    vmaxpu=1.1
+New Load.B36   phases=3   Bus1=B36   kV=11.4   kW=100   kvar=60   vminpu=0.9    vmaxpu=1.1
+New Load.B37   phases=3   Bus1=B37   kV=11.4   kW=20   kvar=10   vminpu=0.9    vmaxpu=1.1
+New Load.B38   phases=3   Bus1=B38   kV=11.4   kW=20   kvar=10   vminpu=0.9    vmaxpu=1.1
+New Load.B39   phases=3   Bus1=B39   kV=11.4   kW=20   kvar=10   vminpu=0.9    vmaxpu=1.1
+New Load.B40   phases=3   Bus1=B40   kV=11.4   kW=20   kvar=10   vminpu=0.9   vmaxpu=1.1
+New Load.B41   phases=3   Bus1=B41   kV=11.4   kW=200   kvar=160   vminpu=0.9    vmaxpu=1.1
+New Load.B42   phases=3   Bus1=B42   kV=11.4   kW=50   kvar=30   vminpu=0.9    vmaxpu=1.1
+New Load.B44   phases=3   Bus1=B44   kV=11.4   kW=30   kvar=20   vminpu=0.9    vmaxpu=1.1
+New Load.B45   phases=3   Bus1=B45   kV=11.4   kW=800   kvar=700   vminpu=0.9    vmaxpu=1.1
+New Load.B46   phases=3   Bus1=B46   kV=11.4   kW=200   kvar=150   vminpu=0.9    vmaxpu=1.1
+New Load.B50   phases=3   Bus1=B50   kV=11.4   kW=200   kvar=160   vminpu=0.9    vmaxpu=1.1
+New Load.B51   phases=3   Bus1=B51   kV=11.4   kW=800   kvar=600   vminpu=0.9    vmaxpu=1.1
+New Load.B52   phases=3   Bus1=B52   kV=11.4   kW=500   kvar=300   vminpu=0.9    vmaxpu=1.1
+New Load.B53   phases=3   Bus1=B53   kV=11.4   kW=500   kvar=350   vminpu=0.9    vmaxpu=1.1
+New Load.B54   phases=3   Bus1=B54   kV=11.4   kW=500   kvar=300   vminpu=0.9   vmaxpu=1.1
+New Load.B55   phases=3   Bus1=B55   kV=11.4   kW=200   kvar=80   vminpu=0.9    vmaxpu=1.1
+New Load.B57   phases=3   Bus1=B57   kV=11.4   kW=30   kvar=20   vminpu=0.9    vmaxpu=1.1
+New Load.B58   phases=3   Bus1=B58   kV=11.4   kW=600   kvar=420   vminpu=0.9    vmaxpu=1.1
+New Load.B60   phases=3   Bus1=B60   kV=11.4   kW=20   kvar=10   vminpu=0.9    vmaxpu=1.1
+New Load.B61   phases=3   Bus1=B61   kV=11.4   kW=20   kvar=10   vminpu=0.9    vmaxpu=1.1
+New Load.B62   phases=3   Bus1=B62   kV=11.4   kW=200   kvar=130   vminpu=0.9    vmaxpu=1.1
+New Load.B63   phases=3   Bus1=B63   kV=11.4   kW=300   kvar=240   vminpu=0.9    vmaxpu=1.1
+New Load.B64   phases=3   Bus1=B64   kV=11.4   kW=300   kvar=200   vminpu=0.9    vmaxpu=1.1
+New Load.B66   phases=3   Bus1=B66   kV=11.4   kW=50   kvar=30   vminpu=0.9    vmaxpu=1.1
+New Load.B68   phases=3   Bus1=B68   kV=11.4   kW=400   kvar=360   vminpu=0.9    vmaxpu=1.1
+New Load.B71   phases=3   Bus1=B71   kV=11.4   kW=2000   kvar=1500   vminpu=0.9    vmaxpu=1.1
+New Load.B72   phases=3   Bus1=B72   kV=11.4   kW=200   kvar=150   vminpu=0.9    vmaxpu=1.1
+New Load.B75   phases=3   Bus1=B75   kV=11.4   kW=1200   kvar=950   vminpu=0.9    vmaxpu=1.1
+New Load.B76   phases=3   Bus1=B76   kV=11.4   kW=300   kvar=180   vminpu=0.9    vmaxpu=1.1
+New Load.B78   phases=3   Bus1=B78   kV=11.4   kW=400   kvar=360   vminpu=0.9    vmaxpu=1.1
+New Load.B79   phases=3   Bus1=B79   kV=11.4   kW=2000   kvar=1300   vminpu=0.9    vmaxpu=1.1
+New Load.B80   phases=3   Bus1=B80   kV=11.4   kW=200   kvar=140   vminpu=0.9    vmaxpu=1.1
+New Load.B81   phases=3   Bus1=B81   kV=11.4   kW=500   kvar=360   vminpu=0.9    vmaxpu=1.1
+New Load.B82   phases=3   Bus1=B82   kV=11.4   kW=100   kvar=30   vminpu=0.9    vmaxpu=1.1
+New Load.B83   phases=3   Bus1=B83   kV=11.4   kW=400   kvar=360   vminpu=0.9    vmaxpu=1.1
+
+New swtcontrol.s1  SwitchedObj = line.7001-1 
+New swtcontrol.s2  SwitchedObj = line.1-2
+New swtcontrol.s3  SwitchedObj = line.2-3
+New swtcontrol.s4  SwitchedObj = line.3-4
+New swtcontrol.s5  SwitchedObj = line.4-5
+New swtcontrol.s6  SwitchedObj = line.5-6
+New swtcontrol.s7  SwitchedObj = line.6-7
+New swtcontrol.s8  SwitchedObj = line.7-8
+New swtcontrol.s9  SwitchedObj = line.7-9
+New swtcontrol.s10  SwitchedObj = line.7-10
+New swtcontrol.s11  SwitchedObj = line.7002-11
+New swtcontrol.s12  SwitchedObj = line.11-12
+New swtcontrol.s13  SwitchedObj = line.12-13
+New swtcontrol.s14  SwitchedObj = line.12-14
+New swtcontrol.s15  SwitchedObj = line.7003-15
+New swtcontrol.s16  SwitchedObj = line.15-16
+New swtcontrol.s17  SwitchedObj = line.16-17
+New swtcontrol.s18  SwitchedObj = line.17-18
+New swtcontrol.s19  SwitchedObj = line.18-19
+New swtcontrol.s20  SwitchedObj = line.19-20
+New swtcontrol.s21  SwitchedObj = line.20-21
+New swtcontrol.s22  SwitchedObj = line.21-22
+New swtcontrol.s23  SwitchedObj = line.21-23
+New swtcontrol.s24  SwitchedObj = line.23-24
+New swtcontrol.s25  SwitchedObj = line.7004-25
+New swtcontrol.s26  SwitchedObj = line.25-26
+New swtcontrol.s27  SwitchedObj = line.26-27
+New swtcontrol.s28  SwitchedObj = line.27-28
+New swtcontrol.s29  SwitchedObj = line.28-29
+New swtcontrol.s30  SwitchedObj = line.7005-30
+New swtcontrol.s31  SwitchedObj = line.30-31
+New swtcontrol.s32  SwitchedObj = line.31-32
+New swtcontrol.s33  SwitchedObj = line.32-33
+New swtcontrol.s34  SwitchedObj = line.33-34
+New swtcontrol.s35  SwitchedObj = line.34-35
+New swtcontrol.s36  SwitchedObj = line.35-36
+New swtcontrol.s37  SwitchedObj = line.36-37
+New swtcontrol.s38  SwitchedObj = line.37-38
+New swtcontrol.s39  SwitchedObj = line.38-39
+New swtcontrol.s40  SwitchedObj = line.39-40
+New swtcontrol.s41  SwitchedObj = line.38-41
+New swtcontrol.s42  SwitchedObj = line.41-42
+New swtcontrol.s43  SwitchedObj = line.7006-43
+New swtcontrol.s44  SwitchedObj = line.43-44
+New swtcontrol.s45  SwitchedObj = line.44-45
+New swtcontrol.s46  SwitchedObj = line.45-46
+New swtcontrol.s47  SwitchedObj = line.7007-47
+New swtcontrol.s48  SwitchedObj = line.47-48
+New swtcontrol.s49  SwitchedObj = line.48-49
+New swtcontrol.s50  SwitchedObj = line.49-50
+New swtcontrol.s51  SwitchedObj = line.50-51
+New swtcontrol.s52  SwitchedObj = line.51-52
+New swtcontrol.s53  SwitchedObj = line.52-53
+New swtcontrol.s54  SwitchedObj = line.53-54
+New swtcontrol.s55  SwitchedObj = line.54-55
+New swtcontrol.s56  SwitchedObj = line.7008-56
+New swtcontrol.s57  SwitchedObj = line.56-57
+New swtcontrol.s58  SwitchedObj = line.57-58
+New swtcontrol.s59  SwitchedObj = line.58-59
+New swtcontrol.s60  SwitchedObj = line.59-60
+New swtcontrol.s61  SwitchedObj = line.60-61
+New swtcontrol.s62  SwitchedObj = line.61-62
+New swtcontrol.s63  SwitchedObj = line.62-63
+New swtcontrol.s64  SwitchedObj = line.63-64
+New swtcontrol.s65  SwitchedObj = line.7009-65
+New swtcontrol.s66  SwitchedObj = line.65-66
+New swtcontrol.s67  SwitchedObj = line.66-67
+New swtcontrol.s68  SwitchedObj = line.67-68
+New swtcontrol.s69  SwitchedObj = line.68-69
+New swtcontrol.s70  SwitchedObj = line.69-70
+New swtcontrol.s71  SwitchedObj = line.70-71
+New swtcontrol.s72  SwitchedObj = line.71-72
+New swtcontrol.s73  SwitchedObj = line.7010-73
+New swtcontrol.s74  SwitchedObj = line.73-74
+New swtcontrol.s75  SwitchedObj = line.74-75
+New swtcontrol.s76  SwitchedObj = line.75-76
+New swtcontrol.s77  SwitchedObj = line.7011-77
+New swtcontrol.s78  SwitchedObj = line.77-78
+New swtcontrol.s79  SwitchedObj = line.78-79
+New swtcontrol.s80  SwitchedObj = line.79-80
+New swtcontrol.s81  SwitchedObj = line.80-81
+New swtcontrol.s82  SwitchedObj = line.81-82
+New swtcontrol.s83  SwitchedObj = line.82-83
+New swtcontrol.s84  SwitchedObj = line.5-55 
+New swtcontrol.s85  SwitchedObj = line.7-60
+New swtcontrol.s86  SwitchedObj = line.11-43
+New swtcontrol.s87  SwitchedObj = line.12-72
+New swtcontrol.s88  SwitchedObj = line.13-76
+New swtcontrol.s89  SwitchedObj = line.14-18
+New swtcontrol.s90  SwitchedObj = line.16-26
+New swtcontrol.s91  SwitchedObj = line.20-83
+New swtcontrol.s92  SwitchedObj = line.28-32
+New swtcontrol.s93  SwitchedObj = line.29-39
+New swtcontrol.s94  SwitchedObj = line.34-46
+New swtcontrol.s95  SwitchedObj = line.40-42
+New swtcontrol.s96  SwitchedObj = line.53-64
+
+!Solve 
+!show losses
+
