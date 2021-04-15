@@ -2,22 +2,22 @@
 N_Vezes = 10
 
 """Especifique o endereço do arquivo Opendss (dentro dos colchetes):"""
-address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
+address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\94_nos.dss]"
 
 """Especifique o número de barras do sistema que você quer trabalhar (33, 69 ou 94):"""
-N_Barras_Sistema = 33
+N_Barras_Sistema = 94
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
-BTMax = 120
+BTMax = 500
 
 """Especifique o tamanho da Lista Tabu"""
-T = 3
+T = 1
 
 """Número máximo de iterações"""
-MaxIter = 1000
+MaxIter = 7000
 
 """Versão do código"""
-versao_codigo = "12"
+versao_codigo = "12.1"
 
 MelhoresFitsGerais = []
 MelhoresSGerais = []
@@ -40,6 +40,7 @@ for i in range (N_Vezes):
     import random 
     import copy
     import time
+    import cmath
     
     start = time.time()
     
@@ -67,8 +68,8 @@ for i in range (N_Vezes):
             return NomesTodasChaves
         elif (N_Barras == 94):
             NomesTodasChaves = [0]*13
-            NomesTodasChaves[0] = ["S84","S54","S53","S96","S63","S62","S61","S85","S6",
-                                   "S7","S4"]
+            NomesTodasChaves[0] = ["S84","S54","S55","S96","S63","S62","S61","S85","S6",
+                                   "S7","S64"]
             NomesTodasChaves[1] = ["S87","S72","S70","S69","S68","S67","S66","S65","S13",
                                    "S88","S75","S74","S73","S76","S71"]
             NomesTodasChaves[2] = ["S77","S78","S79","S80","S81","S82","S83","S91","S20",
@@ -242,6 +243,8 @@ for i in range (N_Vezes):
             N = 1
         else:
             N = 3
+        
+        NomesChaves_aux = NomesChaves.copy()
                
         Vizinhos = []
         FitVizinhos = []
@@ -262,16 +265,17 @@ for i in range (N_Vezes):
                     direcao = -1*i
                 else:
                     direcao = 1*i
-        
-                index = NomesChaves.index(Vizinho[v])
+                
+                #print (NomesChaves_aux)
+                index = NomesChaves_aux.index(Vizinho[v])
                 novoindex = index + direcao
         
                 if (novoindex > N_Chaves_Malha_index[v]):
-                    Vizinho[v] = NomesChaves[novoindex - N_Chaves_Malha[v]]
+                    Vizinho[v] = NomesChaves_aux[novoindex - N_Chaves_Malha[v]]
                 elif (novoindex < (N_Chaves_Malha_index[v]-N_Chaves_Malha[v])):
-                    Vizinho[v] = NomesChaves[N_Chaves_Malha_index[v]]
+                    Vizinho[v] = NomesChaves_aux[N_Chaves_Malha_index[v]]
                 else:
-                    Vizinho[v] = NomesChaves[novoindex]
+                    Vizinho[v] = NomesChaves_aux[novoindex]
                         
                 fit = FitnessIndividuo_ch(Vizinho)
                 if Radialidade():
@@ -320,6 +324,110 @@ for i in range (N_Vezes):
         else:
             return 0 #nao radial
         
+    def Matriz_D ():
+        
+        Y = objeto.get_buildYmatrix()
+        NumNodes = objeto.dssCircuit.NumNodes
+        tensoes_barras, carga_kW, carga_kvar, load_list = objeto.get_dados_barras()
+        fase = 0
+        tensoes_barras_flatten = [item for sublist in tensoes_barras for item in sublist]
+        
+        tensoes_barras_aux = []
+        for i in range (len(tensoes_barras_flatten)-1):
+            if (i%2 == 0):
+               tensoes_barras_aux.append(cmath.rect(tensoes_barras_flatten[i], tensoes_barras_flatten[i+1]))
+        
+        
+        #print (tensoes_barras_aux)
+        """print ("len(tensoes_barras_aux)", len(tensoes_barras_aux))
+        print (carga_kW)
+        print (carga_kvar)
+        print ("len(carga_kW)", len(carga_kW))
+        print ("len(carga_kvar)", len(carga_kvar))
+        print ("NumNodes", NumNodes)"""
+        #consertar diferença entre NumNodes pois é 99 enquanto o array das tensões é de 33 pois as tensões das fases estão agrupadas
+        for i in range (len(tensoes_barras_aux)):
+            for j in range (len(tensoes_barras_aux)):
+                if (i==j):
+                    Y_L = (1/tensoes_barras_aux[i])*np.conjugate((complex(carga_kW[i],carga_kvar[i])/tensoes_barras_aux[i]))
+                    Y[i][j] = Y[i][j] + Y_L
+                    
+    
+        Z = np.linalg.inv(Y) 
+        D = abs(Z)
+        
+        return D 
+
+
+    def S_inicial_DistanciaEletrica (NomesTodasChaves):
+    
+        #objeto.solve_DSS_snapshot()  
+        
+        D = Matriz_D()
+        
+        NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves) 
+        distancias_eletricas_malhas = []
+            
+        #objeto.dssSwtControl.Name = "s33"
+        #switched_obj = objeto.dssSwtControl.SwitchedObj 
+        #print (switched_obj)
+        
+        AllBusNames = objeto.dssCircuit.AllBusNames
+        
+        
+        for i in range (len(NomesTodasChaves_aux)): #for de cada uma das malhas
+            distancias_aux = []
+            for j in range (len(NomesTodasChaves_aux[i])): #for das chaves dentro de cada malha
+                objeto.dssSwtControl.Name = NomesTodasChaves_aux[i][j] #ativa o switch pelo nome da chave
+                switched_obj = objeto.dssSwtControl.SwitchedObj  #descobre o nome da linha referente
+                #num_linha = int(NomesTodasChaves_aux[i][j][1:]) #pega o numero da linha a que se refere
+                objeto.ativa_elemento(switched_obj) #ativa a determinada linha
+                b1, b2 = objeto.get_barras_elemento()
+                #print (objeto.dssCktElement.Name, b1, b2)
+                #print (b1)
+                #b1 = int(b1[1:])
+                #b2 = int(b2[1:])
+                index_b1 = AllBusNames.index(b1)
+                index_b2 = AllBusNames.index(b2)
+                #print ("distancia eletrica", D[3*b1, 3*b2])
+                distancias_aux.append(D[3*index_b1, 3*index_b2])
+            distancias_eletricas_malhas.append(distancias_aux)
+            
+        chaves = []
+        for i in range (len(distancias_eletricas_malhas)):
+            distancia_minima = max(distancias_eletricas_malhas[i])
+            index = distancias_eletricas_malhas[i].index(distancia_minima)
+            chave = NomesTodasChaves[i][index]
+            #print ("A chave escolhida inicialmente na malha",i, "foi", chave)
+            
+            for c in range(len(chaves)):
+                ChavesComuns = list(set(NomesTodasChaves_aux[i]) & set(NomesTodasChaves_aux[c])) #chaves comuns entre a malha M e a malha C (das chaves anteriores)
+                #print ("ChavesComuns entre as malhas", i, "e", c,": ", ChavesComuns)
+                if ((chave in ChavesComuns) and (chaves[c] in ChavesComuns)):
+                   # print ("chave: ", chave)
+                    #print ("chaves[c]: ", chaves[c])
+                    ChavesNaoComunsMalhaM = [x for x in NomesTodasChaves_aux[i] if x not in ChavesComuns] #obtém as chaves que não são comuns entre a malha I e a malha da chave em comum
+                   # print ("NomesTodasChaves_aux[", i, "]: ", NomesTodasChaves_aux[i])
+                   # print ("NomesTodasChaves_aux[", c, "]: ", NomesTodasChaves_aux[c])
+                   # print ("ChavesNaoComunsMalhaM: ", ChavesNaoComunsMalhaM)
+                    distancias_aux = []
+                    for j in range (len(ChavesNaoComunsMalhaM)): 
+                        index_aux = NomesTodasChaves_aux[i].index(ChavesNaoComunsMalhaM[j]) #encontra o index das chaves não comuns dentro do vetor NomesChaves
+                        distancias_aux.append(distancias_eletricas_malhas[i][index_aux]) #adiciona ao vetor potencias_aux os fluxos das chaves não comuns
+                        distancias_aux_sorted = sorted(distancias_aux, reverse=True)
+                    
+                    menor_fluxo_chave_malha = distancias_aux_sorted[0] #pega o menor fluxo entre as chaves não comuns
+                    index_menor_fluxo_chave_malha = distancias_eletricas_malhas[i].index(menor_fluxo_chave_malha)
+                    chave = NomesTodasChaves_aux[i][index_menor_fluxo_chave_malha] #obtém no vetor NomesChaves a chave de menor fluxo
+                  #  print ("nova chave", chave)
+                    break
+        
+            chaves.append(chave)
+        
+        print (chaves)  
+    
+        return chaves   
+        
                 
     class DSS():
     
@@ -345,6 +453,7 @@ for i in range (N_Vezes):
                 #self.dssEngine = self.dssObj.
                 #self.dssSwtControl = self.dssObj.SwtControls
                 self.dssTopology = self.dssCircuit.Topology
+                self.dssSwtControl = self.dssCircuit.SwtControls
         
         def n_loops_DSS(self):
             return self.dssTopology.NumLoops
@@ -406,6 +515,9 @@ for i in range (N_Vezes):
             
             # Retonar o nome do elemento ativado
             #return self.dssCktElement.Name
+            
+        def ativa_barra (self, nome_barra):
+            self.dssCircuit.SetActiveBus (nome_barra)
         
         def get_potencias_elemento(self):
             return self.dssCktElement.Powers
@@ -424,6 +536,48 @@ for i in range (N_Vezes):
         
         def get_names_lines(self):
             return self.dssLines.AllNames
+        
+        def get_buildYmatrix(self):
+            NumNodes = self.dssCircuit.NumNodes
+            Y = np.asarray(self.dssCircuit.SystemY).view(dtype=np.complex).reshape((NumNodes, NumNodes))
+            return Y
+        
+        def get_dados_barras (self):
+        
+            AllBusNames = self.dssCircuit.AllBusNames
+            #print (AllBusNames)
+            carga_kW = []
+            carga_kvar = []
+            load_list = []
+            tensoes_barras = []
+            for i in range (len(AllBusNames)):
+                self.dssCircuit.SetActiveBus (AllBusNames[i])
+                load_list.append (self.dssBus.LoadList)
+                tensoes_barras.append (self.dssBus.VMagAngle)
+                if (load_list[i][0]):
+                    self.dssCircuit.SetActiveElement(load_list[i][0])
+                    carga_kW.append (self.dssCktElement.Powers[0])
+                    carga_kW.append (self.dssCktElement.Powers[2])
+                    carga_kW.append (self.dssCktElement.Powers[4])
+                    carga_kvar.append (self.dssCktElement.Powers[1])
+                    carga_kvar.append (self.dssCktElement.Powers[3])
+                    carga_kvar.append (self.dssCktElement.Powers[5])
+                else:
+                    carga_kW.append (0)
+                    carga_kW.append (0)
+                    carga_kW.append (0)
+                    carga_kvar.append (0)
+                    carga_kvar.append (0)
+                    carga_kvar.append (0)
+                
+            #print (AllBusNames)
+            #print (load_list)
+            #print (carga_kW)
+            #print (carga_kvar)
+            #print (tensoes_barras)
+            
+            
+            return tensoes_barras, carga_kW, carga_kvar, load_list
                  
     
     if __name__ == "__main__":
@@ -439,12 +593,17 @@ for i in range (N_Vezes):
         NomesTodasChaves = Ajuste_SistemaNBarras (N_Barras_Sistema) #obtém o vetor com todas as chaves de todas as malhas (incluindo as chaves repetidas)
         
         #S_ch = S_inicial(NomesTodasChaves) #obtém o S inicial pelo método do menor fluxo nas malhas
-        S_ch = ['S33','S37','S35','S36','S34']
-        #S_ch = ['S72','S69','S71','S70','S73']
-        #S_ch = ["S96","S88","S91","S87","S89","S94","S95","S93","S92","S90","S84","S85","S86"]
-        #S_ch = ['S7', 'S28', 'S11', 'S17', 'S14']
+        if (N_Barras_Sistema == 33):
+            S_ch = ['S33','S37','S35','S36','S34']
+        elif (N_Barras_Sistema == 69):
+            S_ch = ['S72','S69','S71','S70','S73']
+        elif (N_Barras_Sistema == 94):
+            S_ch = ["S96","S88","S91","S87","S89","S94","S95","S93","S92","S90","S84","S85","S86"]
+
         NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
-               
+        FitS = FitnessIndividuo_ch(S_ch)
+        S_ch = S_inicial_DistanciaEletrica(NomesTodasChaves)
+        NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch(NomesTodasChaves, S_ch)
         FitS = FitnessIndividuo_ch(S_ch)
         print ("Configuração inicial: ", S_ch)
         
@@ -487,11 +646,12 @@ for i in range (N_Vezes):
             
             #vai adicionando os movimentos de cada S selecionado à lista_tabu_completa;
             #conforme ela vai preenchendo os movimentos mais antigos vão sendo eliminados
-            if (len(lista_tabu_completa)==T): 
-                lista_tabu_completa.pop(0)
-                lista_tabu_completa.append(lista_tabu)
-            else:
-                lista_tabu_completa.append(lista_tabu)
+            if (T!=0):
+                if (len(lista_tabu_completa)==T): 
+                    lista_tabu_completa.pop(0)
+                    lista_tabu_completa.append(lista_tabu)
+                else:
+                    lista_tabu_completa.append(lista_tabu)
                 
             #organiza o fit, os movimentos e os vizinhos de acordo com o fit (do melhor pro pior)    
             fitorg, vizorg_ch = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS_ch)
@@ -504,15 +664,22 @@ for i in range (N_Vezes):
                 S_ch = vizorg_ch[0]
                 fit_novo_S = fitorg[0]
                 novo_tabu = S_ch
-            else: #caso esteja na lista tabu, entra pro processo de escolha
-                lista_tabu_completa_flat = [item for sublist in lista_tabu_completa for item in sublist]
-                for m in range (len(vizorg_ch)):
-                    if (any(n in lista_tabu_completa_flat for n in vizorg_ch[m]) == False):
-                        #print ("O vizinho escolhido foi o", m)
-                        S_ch = vizorg_ch[m]
-                        fit_novo_S = fitorg[m]
-                        novo_tabu = S_ch
-                        break
+            else: 
+                #caso esteja na lista tabu, entra pro processo de escolha
+                if (T!=0):
+                    lista_tabu_completa_flat = [item for sublist in lista_tabu_completa for item in sublist]
+                    for m in range (len(vizorg_ch)):
+                        if (any(n in lista_tabu_completa_flat for n in vizorg_ch[m]) == False):
+                            #print ("O vizinho escolhido foi o", m)
+                            S_ch = vizorg_ch[m]
+                            fit_novo_S = fitorg[m]
+                            novo_tabu = S_ch
+                            break
+                else:
+                    S_ch = vizorg_ch[0]
+                    fit_novo_S = fitorg[0]
+                    novo_tabu = S_ch
+                    
             
             #se o fit do novo S for o melhor já encontrado:
             if (fit_novo_S < BestFit):
