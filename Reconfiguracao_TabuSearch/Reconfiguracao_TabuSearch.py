@@ -8,7 +8,7 @@ N_Barras_Sistema = 94
 BTMax = 20
 
 """Especifique o tamanho da Lista Tabu"""
-T = 1
+T = 2
 
 """Especifique o número de vizinhos a serem gerados:"""
 NNb = 25
@@ -23,12 +23,19 @@ versao_codigo = "13"
 Distancia Elétrica ou default (PFO, DE, default)"""
 Tipo_S_inicial = "DE"
 
+"Você deseja salvar os resultados no Excel? Yes or no"
+DesejaSalvar = "Yes"
+
 if N_Barras_Sistema == 33:
     address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
 elif N_Barras_Sistema == 69:
     address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\69_barras.dss]"
 elif N_Barras_Sistema == 94:
     address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\94_nos.dss]"
+elif N_Barras_Sistema == 16:
+    address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\16_barras.dss]"
+elif N_Barras_Sistema == 5:
+    address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\5_barras.dss]"
 
 MelhoresFitsGerais = []
 MelhoresSGerais = []
@@ -103,6 +110,12 @@ for i in range (N_Vezes):
                                     "S58","S59","S60"]
             NomesTodasChaves[12] = ["S11","S86","S43"]
             return NomesTodasChaves
+        elif (N_Barras == 5):
+            NomesTodasChaves = [0]*3
+            NomesTodasChaves[0] = ["S1", "S2", "S3"]
+            NomesTodasChaves[1] = ["S3", "S4", "S5"]
+            NomesTodasChaves[2] = ["S5", "S6", "S7"]
+            return NomesTodasChaves
             
     def Tensao_Sistema (N_Barras):
         if (N_Barras == 33):
@@ -111,6 +124,8 @@ for i in range (N_Vezes):
             return 7309.25
         elif (N_Barras == 94):
             return 6581.8
+        elif (N_Barras == 5):
+            return 577.35
         
     def S_inicial_PFO(NomesTodasChaves): 
     
@@ -371,7 +386,8 @@ for i in range (N_Vezes):
                     direcao = -1*i
                 else:
                     direcao = 1*i
-        
+                #print ("Vizinho[v]", Vizinho[v])
+                #print ("NomesChaves", NomesChaves)
                 index = NomesChaves.index(Vizinho[v])
                 novoindex = index + direcao
         
@@ -408,6 +424,8 @@ for i in range (N_Vezes):
             S_otima = ["S69", "S14", "S55", "S61", "S70"]
         elif N_Barras_Sistema == 94:
             S_otima = ["S55","S7","S86","S72","S13","S89","S90","S83","S92","S39","S34","S42","S62"]
+        elif N_Barras_Sistema == 5:
+            S_otima = ["S3", "S4", "S7"]
         
         ChavesComuns = list(set(S_otima) & set(S_ch))
         
@@ -420,7 +438,7 @@ for i in range (N_Vezes):
     #e envia também o valor da menor tensão e da maior tensão
     def Limites_tensao (tensao_especificada):
         limite_superior = tensao_especificada*1.05
-        limite_inferior = tensao_especificada*0.93
+        limite_inferior = tensao_especificada*0.9
         
         tensoes = objeto.get_tensoes_DSS()
         min_tensao_pu = min(tensoes)/tensao_especificada
@@ -632,12 +650,16 @@ for i in range (N_Vezes):
                 S_ch = ['S72','S69','S71','S70','S73']
             elif (N_Barras_Sistema == 94):
                 S_ch = ["S96","S88","S91","S87","S89","S94","S95","S93","S92","S90","S84","S85","S86"] 
+            elif (N_Barras_Sistema == 5):
+                S_ch = ["S2", "S3", "S5"]
         
         NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
                
         FitS = FitnessIndividuo_ch(S_ch)
-        #print ("Configuração inicial: ", S_ch)
-        
+        print ("Configuração inicial: ", S_ch)
+        TensoesAntes = objeto.get_tensoes_DSS()
+        AllBusNames = objeto.dssCircuit.AllBusNames
+        print ("len AllBusNames", len(AllBusNames))
         BestFit = FitS
         BestS_ch = S_ch
         Iter = 0
@@ -656,7 +678,7 @@ for i in range (N_Vezes):
             #print ("Sistema nao radial")
             radialidade = 0
     
-       # print ("Fit inicial: ", FitS)
+        print ("Fit inicial: ", FitS)
         
         i = 0
         BestIter = 1        
@@ -709,6 +731,7 @@ for i in range (N_Vezes):
                 BestIter = i
                 #print ("Novos BestFit e BestS encontrados")
                 BestFit =  FitnessIndividuo_ch(BestS_ch)
+                TensoesDepois = objeto.get_tensoes_DSS()
                 status_tensao, min_tensao, max_tensao = Limites_tensao(Tensao_Sistema(N_Barras_Sistema))
                 if (status_tensao == 1):
                     #print ("Tensao nos limites")
@@ -733,7 +756,7 @@ for i in range (N_Vezes):
             #reorganiza as chaves para dar uma aleatoriedade ao sistema;
             #além disso, evita que as chaves fiquem engessadas em uma malha só sempre
             NomesChaves, N_Chaves_Malha, N_Malhas = OrganizaChaves_com_S_ch (NomesTodasChaves, S_ch)
-            
+            #print ("NomesChaves", NomesChaves)
             VizS_ch.clear()
             FitVizS.clear()
             fitorg.clear()
@@ -741,9 +764,9 @@ for i in range (N_Vezes):
             vizorg_ch.clear()
         
         
-        #print ("--------Resultado da rodada", k, "--------")
-        #print ("BestIter: ", BestIter)
-        #print ("Melhor configuração: ", BestS_ch, "Fit: ", BestFit)
+        print ("--------Resultado da rodada", k, "--------")
+        print ("BestIter: ", BestIter)
+        print ("Melhor configuração: ", BestS_ch, "Fit: ", BestFit)
        #if (tensao==1):
        #     print ("Tensão: OK")
        # else:
@@ -752,8 +775,8 @@ for i in range (N_Vezes):
         #    print ("Radialidade: OK")
         #else:
         #    print ("Radialidade: erro")
-            
-        if (tensao == 1 and radialidade == 1):
+        if (radialidade == 1):
+        #if (tensao == 1 and radialidade == 1):
             k+=1
             MelhoresFitsGerais.append(BestFit)
             MelhoresSGerais.append(BestS_ch)
@@ -806,8 +829,9 @@ print ("Tempo gasto total: ", sum(TempoGasto))
 
 valores = [N_Vezes, N_Barras_Sistema, BTMax, T, MaxIter, solucoesotimas, media_perdas, desvio_padrao,
            sum(TempoGasto), sum(TempoGasto)/len(TempoGasto), versao_codigo, rendimento ,str(BestSEver), 
-           BestFitEver, str(WorstSEver), WorstFitEver, Tipo_S_inicial]
+           BestFitEver, str(WorstSEver), WorstFitEver, Tipo_S_inicial, NNb]
 
 ws.append(valores)
-    
-wb.save(r"C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Resultados_TS.xlsx")
+
+if (DesejaSalvar == "Yes" or DesejaSalvar == "yes"):
+    wb.save(r"C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Resultados_TS.xlsx")
