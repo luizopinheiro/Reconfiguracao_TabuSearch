@@ -3,64 +3,66 @@ Set DefaultBaseFrequency=60
 
 New circuit.feeder1 basekv=23.00 pu=1.00 MVAsc3=20000000 MVAsc1=21000000 Bus1=b1 
 
-New Line.L1     Phases=3 Bus1=b1  Bus2=b2 r1=0.39675  x1=0.529 
-New Line.L2     Phases=3 Bus1=b2  Bus2=b3 r1=0.4232  x1=0.5819 
-New Line.L3     Phases=3 Bus1=b2  Bus2=b4 r1=0.4761 x1=0.9522 
-New Line.L4     Phases=3 Bus1=b4  Bus2=b5 r1=0.2116 x1=0.2116
-New Line.L5     Phases=3 Bus1=b1  Bus2=b6 r1=0.5819 x1=0.5819
-New Line.L6     Phases=3 Bus1=b6  Bus2=b7 r1=0.4232 x1=0.5819 
-New Line.L7     Phases=3 Bus1=b6  Bus2=b8 r1=0.5819 x1=0.5819 
-New Line.L8     Phases=3 Bus1=b7  Bus2=b9 r1=0.5819 x1=0.5819
-New Line.L9     Phases=3 Bus1=b7  Bus2=b10 r1=0.4232 x1=0.5819
-New Line.L10     Phases=3 Bus1=b1  Bus2=b11 r1=0.5819 x1=0.5819
-New Line.L11    Phases=3 Bus1=b11  Bus2=b12 r1=0.4761 x1=0.6348 
-New Line.L12    Phases=3 Bus1=b11  Bus2=b13 r1=0.4232 x1=0.5819 
-New Line.L13    Phases=3 Bus1=b13  Bus2=b14 r1=0.2116 x1=0.2116 
-New Line.L14       Phases=3 Bus1=b3  Bus2=b9 r1=0.2116 x1=0.2116 
-New Line.L15     Phases=3 Bus1=b8  Bus2=b12 r1=0.2116 x1=0.2116
-New Line.L16     Phases=3 Bus1=b5  Bus2=b14 r1=0.4761 x1=0.6348
+New Line.L1-4     Phases=3 Bus1=b1  Bus2=b4 r1=0.39675  x1=0.529 
+New Line.L4-5     Phases=3 Bus1=b4  Bus2=b5 r1=0.4232  x1=0.5819 
+New Line.L4-6     Phases=3 Bus1=b4  Bus2=b6 r1=0.4761 x1=0.9522 
+New Line.L6-7     Phases=3 Bus1=b6  Bus2=b7 r1=0.2116 x1=0.2116
+New Line.L2-8     Phases=3 Bus1=b1  Bus2=b8 r1=0.5819 x1=0.5819
+New Line.L8-9     Phases=3 Bus1=b8  Bus2=b9 r1=0.4232 x1=0.5819 
+New Line.L8-10     Phases=3 Bus1=b8  Bus2=b10 r1=0.5819 x1=0.5819 
+New Line.L9-11     Phases=3 Bus1=b9  Bus2=b11 r1=0.5819 x1=0.5819
+New Line.L9-12     Phases=3 Bus1=b9  Bus2=b12 r1=0.4232 x1=0.5819
+New Line.L3-13    Phases=3 Bus1=b1  Bus2=b13 r1=0.5819 x1=0.5819
+New Line.L13-14    Phases=3 Bus1=b13  Bus2=b14 r1=0.4761 x1=0.6348 
+New Line.L13-15    Phases=3 Bus1=b13  Bus2=b15 r1=0.4232 x1=0.5819 
+New Line.L15-16    Phases=3 Bus1=b15  Bus2=b16 r1=0.2116 x1=0.2116 
+New Line.L5-11    Phases=3 Bus1=b5  Bus2=b11 r1=0.2116 x1=0.2116 
+New Line.L10-14    Phases=3 Bus1=b10  Bus2=b14 r1=0.2116 x1=0.2116
+New Line.L7-16    Phases=3 Bus1=b7  Bus2=b16 r1=0.4761 x1=0.6348
 
-New Load.LoadB1      Bus1=b2 Phases=3 Conn=Wye Model=1 kV=23.00 kW=2000  kVAR= 1600 
-New Load.LoadB2      Bus1=b3 Phases=3 Conn=Wye Model=1  kV=23.00 kW=3000  kVAR= 1500  
-New Load.LoadB3      Bus1=b4 Phases=3 Conn=Wye Model=1  kV=23.00 kW=2000  kVAR= 800 
-New Load.LoadB4      Bus1=b5 Phases=3 Conn=Wye Model=1  kV=23.00 kW=1500  kVAR= 1200
-New Load.LoadB5      Bus1=b6 Phases=3 Conn=Wye Model=1  kV=23.00 kW=4000  kVAR= 2700  
-New Load.LoadB6      Bus1=b7 Phases=3 Conn=Wye Model=1 kV=23.00 kW=5000  kVAR= 3000 
-New Load.LoadB7      Bus1=b8 Phases=3 Conn=Wye Model=1 kV=23.00 kW=1000  kVAR= 900
-New Load.LoadB8      Bus1=b9 Phases=3 Conn=Wye Model=1  kV=23.00 kW=600  kVAR= 100 
-New Load.LoadB9      Bus1=b10 Phases=3 Conn=Wye Model=1  kV=23.00 kW=4500  kVAR= 2000 
-New Load.LoadB10      Bus1=b11 Phases=3 Conn=Wye Model=1  kV=23.00 kW=1000  kVAR= 900 
-New Load.LoadB11      Bus1=b12 Phases=3 Conn=Wye Model=1 kV=23.00 kW=1000  kVAR= 700 
-New Load.LoadB12      Bus1=b13 Phases=3 Conn=Wye Model=1  kV=23.00 kW=1000  kVAR= 900 
-New Load.LoadB13      Bus1=b14 Phases=3 Conn=Wye Model=1  kV=23.00 kW=2100  kVAR= 1000 
+New Load.LoadB1      Bus1=b4 Phases=3 Conn=Wye Model=1 kV=23.00 kW=2000  kVAR= 1600 
+New Load.LoadB2      Bus1=b5 Phases=3 Conn=Wye Model=1  kV=23.00 kW=3000  kVAR= 1500  
+New Load.LoadB3      Bus1=b6 Phases=3 Conn=Wye Model=1  kV=23.00 kW=2000  kVAR= 800 
+New Load.LoadB4      Bus1=b7 Phases=3 Conn=Wye Model=1  kV=23.00 kW=1500  kVAR= 1200
+New Load.LoadB5      Bus1=b8 Phases=3 Conn=Wye Model=1  kV=23.00 kW=4000  kVAR= 2700  
+New Load.LoadB6      Bus1=b9 Phases=3 Conn=Wye Model=1 kV=23.00 kW=5000  kVAR= 3000 
+New Load.LoadB7      Bus1=b10 Phases=3 Conn=Wye Model=1 kV=23.00 kW=1000  kVAR= 900
+New Load.LoadB8      Bus1=b11 Phases=3 Conn=Wye Model=1  kV=23.00 kW=600  kVAR= 100 
+New Load.LoadB9      Bus1=b12 Phases=3 Conn=Wye Model=1  kV=23.00 kW=4500  kVAR= 2000 
+New Load.LoadB10      Bus1=b13 Phases=3 Conn=Wye Model=1  kV=23.00 kW=1000  kVAR= 900 
+New Load.LoadB11      Bus1=b14 Phases=3 Conn=Wye Model=1 kV=23.00 kW=1000  kVAR= 700 
+New Load.LoadB12      Bus1=b15 Phases=3 Conn=Wye Model=1  kV=23.00 kW=1000  kVAR= 900 
+New Load.LoadB13      Bus1=b16 Phases=3 Conn=Wye Model=1  kV=23.00 kW=2100  kVAR= 1000 
 
-New Capacitor.C5        phases=3 Bus1=b3 kv=23.00 kvar=1100
-New Capacitor.C6        phases=3 Bus1=b4 kv=23.00 kvar=1200
-New Capacitor.C9        phases=3 Bus1=b7 kv=23.00 kvar=1200
-New Capacitor.C11        phases=3 Bus1=b9 kv=23.00 kvar=600
-New Capacitor.C12        phases=3 Bus1=b10 kv=23.00 kvar=3700
-New Capacitor.C14        phases=3 Bus1=b12 kv=23.00 kvar=1800
-New Capacitor.C16        phases=3 Bus1=b14 kv=23.00 kvar=1800
+New Capacitor.C5        phases=3 Bus1=b5 kv=23.00 kvar=1100
+New Capacitor.C6        phases=3 Bus1=b6 kv=23.00 kvar=1200
+New Capacitor.C9        phases=3 Bus1=b9 kv=23.00 kvar=1200
+New Capacitor.C11        phases=3 Bus1=b11 kv=23.00 kvar=600
+New Capacitor.C12        phases=3 Bus1=b12 kv=23.00 kvar=3700
+New Capacitor.C14        phases=3 Bus1=b14 kv=23.00 kvar=1800
+New Capacitor.C16        phases=3 Bus1=b16 kv=23.00 kvar=1800
 
-New swtcontrol.S1 SwitchedObj=Line.L1 action=close
-New swtcontrol.S2 SwitchedObj=Line.L2 action=close
-New swtcontrol.S3 SwitchedObj=Line.L3 action=close
-New swtcontrol.S4 SwitchedObj=Line.L4 action=close
-New swtcontrol.S5 SwitchedObj=Line.L5 action=close
-New swtcontrol.S6 SwitchedObj=Line.L6 action=close
-New swtcontrol.S7 SwitchedObj=Line.L7 action=close
-New swtcontrol.S8   SwitchedObj=Line.L8 action=close
-New swtcontrol.S9 SwitchedObj=Line.L9 action=close
-New swtcontrol.S10 SwitchedObj=Line.L10 action=close
-New swtcontrol.S11 SwitchedObj=Line.L11 action=close
-New swtcontrol.S12 SwitchedObj=Line.L12 action=close
-New swtcontrol.S13 SwitchedObj=Line.L13 action=close
+New swtcontrol.S1-4 SwitchedObj=Line.L1-4 action=close
+New swtcontrol.S4-5 SwitchedObj=Line.L4-5 action=close
+New swtcontrol.S4-6 SwitchedObj=Line.L4-6 action=close
+New swtcontrol.S6-7 SwitchedObj=Line.L6-7 action=close
+New swtcontrol.S2-8 SwitchedObj=Line.L2-8 action=close
+New swtcontrol.S8-9 SwitchedObj=Line.L8-9 action=close
+New swtcontrol.S8-10 SwitchedObj=Line.L8-10 action=close
+New swtcontrol.S9-11   SwitchedObj=Line.L9-11 action=close
+New swtcontrol.S9-12    SwitchedObj=Line.L9-12 action=close
+New swtcontrol.S3-13 SwitchedObj=Line.L3-13 action=close
+New swtcontrol.S13-14 SwitchedObj=Line.L13-14 action=close
+New swtcontrol.S13-15 SwitchedObj=Line.L13-15 action=close
+New swtcontrol.S15-16 SwitchedObj=Line.L15-16 action=close
 
-New swtcontrol.S14 SwitchedObj=Line.L14 action=close
-New swtcontrol.S15 SwitchedObj=Line.L15 action=close
-New swtcontrol.S16 SwitchedObj=Line.L16 action=close
+New swtcontrol.S5-11 SwitchedObj=Line.L5-11 action=close
+New swtcontrol.S10-14 SwitchedObj=Line.L10-14 action=close
+New swtcontrol.S7-16 SwitchedObj=Line.L7-16 action=close
 
 
-solve
-show losses
-show voltages
+!solve
+!show losses
+!show unserved
+!show voltages
+
