@@ -2,16 +2,16 @@
 N_Vezes = 1
 
 """Especifique o número de barras do sistema que você quer trabalhar (33, 69 ou 94):"""
-N_Barras_Sistema = 16
+N_Barras_Sistema = 69
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
-BTMax = 10
+BTMax = 15
 
 """Especifique o tamanho da Lista Tabu"""
-T = 1
+T = 2 #1 parece bom para o de 69
 
 """Especifique o número de vizinhos a serem gerados:"""
-NNb = 3
+NNb = 10
 
 """Número máximo de iterações"""
 MaxIter = 2000
@@ -24,7 +24,7 @@ Distancia Elétrica ou default (PFO, DE, default)"""
 Tipo_S_inicial = "default"
 
 "Você deseja salvar os resultados no Excel? Yes or no"
-DesejaSalvar = "no"
+DesejaSalvar = "Yes"
 
 if N_Barras_Sistema == 33:
     address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
@@ -231,49 +231,64 @@ for i in range (N_Vezes):
     #versão explicada na página 102 do caderninho preto
     def S_inicial_DistanciaEletrica_v2 (NomesTodasChaves, S):
 
-        
         AllBusNames = objeto.dssCircuit.AllBusNames
         NomesTodasChaves_aux = copy.deepcopy(NomesTodasChaves) 
-        #distancias_eletricas_malhas = []
+        distancias_eletricas_malhas = []
         
         S_copy = copy.copy(S)
         chaves = []
+        fit_padrao = FitnessIndividuo_ch(S_copy)
         
         for i in range (len(S)):
-            chave_retirada = S.pop(i)    
-            FitnessIndividuo_ch(S)
-            S.insert(i, chave_retirada)
+            print ("-------malha ", i)
+            chave_retirada = S_copy.pop(i)    
+            fit = FitnessIndividuo_ch(S_copy)
+            S_copy.insert(i, chave_retirada)
             D = Matriz_D()
+            #Z = Matriz_Z()
             distancias_malha = []
             for j in range (len(NomesTodasChaves_aux[i])): #for das chaves dentro de cada malha
                 objeto.dssSwtControl.Name = NomesTodasChaves_aux[i][j] #ativa o switch pelo nome da chave
                 switched_obj = objeto.dssSwtControl.SwitchedObj  #descobre o nome da linha referente
-                #num_linha = int(NomesTodasChaves_aux[i][j][1:]) #pega o numero da linha a que se refere
                 objeto.ativa_elemento(switched_obj) #ativa a determinada linha
                 b1, b2 = objeto.get_barras_elemento()
                 index_b1 = AllBusNames.index(b1)
                 index_b2 = AllBusNames.index(b2)
-                #print ("distancia eletrica", D[3*b1, 3*b2])
                 distancias_malha.append(D[3*index_b1, 3*index_b2])
-            
+                
+                #Z_eq_km = abs((Z[3*index_b1, 3*index_b1] - Z[3*index_b1, 3*index_b2]) - (Z[3*index_b1, 3*index_b2] - Z[3*index_b2, 3*index_b2]))
+                #distancias_malha.append(Z_eq_km)
+                
+            print ("NomesTodasChaves_aux", NomesTodasChaves_aux[i])
             print ("distancias_malha", distancias_malha)
         
             D = []
             k = 0
             distancias_malha_sorted = []
             distancias_malha_sorted  = sorted(distancias_malha, reverse=True)
+            chave_anterior = S_copy[i]
             while (1):
                 distancia_menor = distancias_malha_sorted [k]
                 index_maior_distancia = distancias_malha.index(distancia_menor)
                 chave = NomesTodasChaves[i][index_maior_distancia]
+                fit_anterior = FitnessIndividuo_ch(S_copy) 
                 S_copy[i] = chave
-                FitnessIndividuo_ch(S_copy) 
-                
+                fit = FitnessIndividuo_ch(S_copy) 
+                print ("chave escolhida", chave)
                 if (Radialidade()):
-                    chaves.append(chave)
-                    break
+                    print ("é radial")
+                    print (fit)
+                    if (round(fit, 1) < round(fit_padrao,1)):
+                        # or 0.999*fit < fit_padrao or 1.001*fit < fit_padrao)
+                        print ("chave escolhida de vdd: ", chave)
+                        chaves.append(chave)
+                        break
+                    else:
+                        k += 1
                 else:
                     k += 1
+          
+        print (chaves)  
     
         return chaves
 
@@ -388,6 +403,10 @@ for i in range (N_Vezes):
             N_Chaves_Malha_index.append(soma - 1)
     
         lado = random.randint(0, 1) #1 pra direita e 0 pra esquerda
+        """if (lado == 0):
+            print ("Esquerda")
+        else:
+            print ("Direita")"""
         direcao = 0
         #print ("novos vizinhos")
         for i in range (1,N+1):  
@@ -653,22 +672,24 @@ for i in range (N_Vezes):
         if (Tipo_S_inicial == "DE"):
             if (N_Barras_Sistema == 33):
                 #S_ch = ['S7', 'S28', 'S10', 'S15', 'S13']
-                S_ch = ['S7', 'S28', 'S11', 'S17', 'S14']
+                S_ch = ['S7', 'S28', 'S10', 'S15', 'S14']
             elif (N_Barras_Sistema == 69):
-                S_ch = ['S58', 'S42', 'S14', 'S20', 'S26']
+                S_ch = ['S58', 'S42', 'S14', 'S17', 'S26']
             elif (N_Barras_Sistema == 94):
-                S_ch = ['S61', 'S76', 'S82', 'S69', 'S14', 'S94', 'S95', 'S37', 'S92', 'S90', 'S54', 'S6', 'S86']
+                S_ch = ['S96', 'S88', 'S82', 'S72', 'S89', 'S94', 'S95', 'S37', 'S92', 'S90', 'S55', 'S7', 'S86']
             elif (N_Barras_Sistema == 5):
                 S_ch = ['S3', 'S5', 'S7']
             elif (N_Barras_Sistema == 16):
-                S_ch = ['S9-11', 'S13-14', 'S6-7']
+                S_ch = ['S9-11', 'S10-14', 'S6-7']
         elif (Tipo_S_inicial == "PFO"):
             if (N_Barras_Sistema == 33):
-                S_ch = ['S7', 'S28', 'S10', 'S36', 'S14']
+                S_ch = ['S7', 'S37', 'S11', 'S17', 'S14']
             elif (N_Barras_Sistema == 69):
-                S_ch = ['S58', 'S69', 'S13', 'S20', 'S61']
+                S_ch = ['S58', 'S69', 'S14', 'S70', 'S61']
             elif (N_Barras_Sistema == 94):
-                S_ch = ['S84', 'S88', 'S89', 'S72', 'S42', 'S33', 'S39', 'S39', 'S92', 'S90', 'S5', 'S7', 'S86'] #TÁ COM ERRO
+                S_ch = ['S96', 'S88', 'S82', 'S72', 'S89', 'S34', 'S42', 'S39', 'S92', 'S90', 'S84', 'S7', 'S86']
+            elif (N_Barras_Sistema == 16):
+                S_ch = ['S9-11', 'S8-10', 'S7-16']
         elif (Tipo_S_inicial == "default"):
             if (N_Barras_Sistema == 33):
                 S_ch = ['S33','S37','S35','S36','S34']
@@ -718,8 +739,8 @@ for i in range (N_Vezes):
         while (i-BestIter) <= BTMax:
             
             i+=1
-            print ("================NOVA ITERAÇÃO=================", i)
-            print ("Partindo com Solução Corrente:", S_ch)
+            #print ("================NOVA ITERAÇÃO=================", i)
+            #print ("Partindo com Solução Corrente:", S_ch)
             VizS_ch, FitVizS = Vizinhos_LR_N (S_ch, N_Malhas, N_Chaves_Malha, N_Barras_Sistema)
             
             lista_tabu = novo_tabu    
@@ -735,11 +756,12 @@ for i in range (N_Vezes):
             #organiza o fit, os movimentos e os vizinhos de acordo com o fit (do melhor pro pior)    
             fitorg, vizorg_ch = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS_ch)
             
-            for j in range (len(fitorg)):
-                print ("Vizinho", j,": ", VizS_ch[j], "Fit: ", FitVizS[j])
+            #for j in range (len(fitorg)):
+                #print ("Vizinho", j,": ", VizS_ch[j], "Fit: ", FitVizS[j])
                                 
             #PARTE DA ESCOLHA DO NOVO S:
-            if (fitorg[0] < BestFit): #função de aspiração: caso o melhor vizinho seja a melhor solução já encontrada mas estiver na LT, aceita mesmo assim 
+            if (fitorg[0] < BestFit and BestS_ch!=vizorg_ch[0]): #função de aspiração: caso o melhor vizinho seja a melhor solução já encontrada mas estiver na LT, aceita mesmo assim 
+                #print ("Aspiração")
                 S_ch = vizorg_ch[0]
                 fit_novo_S = fitorg[0]
                 novo_tabu = S_ch
@@ -747,7 +769,7 @@ for i in range (N_Vezes):
                 lista_tabu_completa_flat = [item for sublist in lista_tabu_completa for item in sublist]
                 for m in range (len(vizorg_ch)):
                     if (any(n in lista_tabu_completa_flat for n in vizorg_ch[m]) == False):
-                        print ("O vizinho escolhido foi o", m)
+                        #print ("O vizinho escolhido foi o", m)
                         S_ch = vizorg_ch[m]
                         fit_novo_S = fitorg[m]
                         novo_tabu = S_ch
@@ -776,10 +798,10 @@ for i in range (N_Vezes):
                 
             if (i == MaxIter):
                 break
-            print ("Novo S:", S_ch, "Fit:", fit_novo_S)
-            print ("Lista Tabu Completa: ", lista_tabu_completa)
+            #print ("Novo S:", S_ch, "Fit:", fit_novo_S)
+            #print ("Lista Tabu Completa: ", lista_tabu_completa)
             
-            print ("BestS: ", BestS_ch, "BestFit:", BestFit)
+            #print ("BestS: ", BestS_ch, "BestFit:", BestFit)
             
             #reorganiza as chaves para dar uma aleatoriedade ao sistema;
             #além disso, evita que as chaves fiquem engessadas em uma malha só sempre
