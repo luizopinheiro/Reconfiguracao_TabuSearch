@@ -1,14 +1,14 @@
 """Especifique quantas vezes você quer que o programa rode:"""
-N_Vezes = 1
+N_Vezes = 100
 
 """Especifique o número de barras do sistema que você quer trabalhar (33, 69 ou 94):"""
-N_Barras_Sistema = 69
+N_Barras_Sistema = 33
 
 """Especifique quantas iterações sem melhora o sistema deve fazer no máximo"""
 BTMax = 15
 
 """Especifique o tamanho da Lista Tabu"""
-T = 2 #1 parece bom para o de 69
+T = 5
 
 """Especifique o número de vizinhos a serem gerados:"""
 NNb = 10
@@ -21,21 +21,23 @@ versao_codigo = "13"
 
 """Especifique qual tipo de S inicial você quer: PFO, 
 Distancia Elétrica ou default (PFO, DE, default)"""
-Tipo_S_inicial = "default"
+Tipo_S_inicial = "DE"
 
 "Você deseja salvar os resultados no Excel? Yes or no"
-DesejaSalvar = "Yes"
+DesejaSalvar = "No"
 
 if N_Barras_Sistema == 33:
-    address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
+    address_opendss = r"[C:\Users\luiz3\Meu Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\33_barras.dss]"
 elif N_Barras_Sistema == 69:
-    address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\69_barras.dss]"
+    #address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\69_barras.dss]"
+    address_opendss = r"[C:\Users\luiz3\Desktop\Área de Transferência\69barras_versaoraoni.dss]"
 elif N_Barras_Sistema == 94:
-    address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\94_nos.dss]"
+    address_opendss = r"[C:\Users\luiz3\Meu Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\94_nos.dss]"
 elif N_Barras_Sistema == 16:
-    address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\16_barras.dss]"
+    address_opendss = r"[C:\Users\luiz3\Meu Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\16_barras.dss]"
 elif N_Barras_Sistema == 5:
-    address_opendss = r"[C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\5_barras.dss]"
+    address_opendss = r"[C:\Users\luiz3\Meu Drive (luiz.filho@cear.ufpb.br)\Tese\Código\sistemas\5_barras.dss]"
+
 
 MelhoresFitsGerais = []
 MelhoresSGerais = []
@@ -47,7 +49,7 @@ solucoesotimas = 0
 k = 0
 
 from openpyxl import load_workbook
-wb = load_workbook(r"C:\Users\luiz3\Google Drive (luiz.filho@cear.ufpb.br)\Tese\Resultados_TS.xlsx")
+wb = load_workbook(r"C:\Users\luiz3\Meu Drive (luiz.filho@cear.ufpb.br)\Tese\Resultados_TS.xlsx")
 ws = wb.worksheets[0]
 
 for i in range (N_Vezes):
@@ -66,15 +68,22 @@ for i in range (N_Vezes):
         
         if (N_Barras == 69):
             NomesTodasChaves = [0,0,0,0,0]
-            NomesTodasChaves[0] = ["S4","S5","S6","S7","S8","S46","S47","S48","S49","S52","S53",
-                          "S54","S55","S56","S57","S58","S72"]
-            NomesTodasChaves[1] = ["S3","S4","S5","S6","S7","S8","S9","S10","S35","S36","S37",
-                          "S38","S39","S40","S41","S42","S69"]
-            NomesTodasChaves[2] = ["S11","S12","S13","S14","S43","S44","S45","S69","S71"]
-            NomesTodasChaves[3] = ["S13","S14","S15","S16","S17","S18","S19","S20","S70"]
-            NomesTodasChaves[4] = ["S9","S10","S11","S12","S21","S22","S23","S24","S25","S26","S52","S53",
-                      "S54","S55","S56","S57","S58","S59","S60","S61","S62","S63",
-                      "S64","S73","S70"]
+            #NomesTodasChaves[0] = ["S4","S5","S6","S7","S8","S46","S47","S48","S49","S52","S53",
+                          #"S54","S55","S56","S57","S58","S72"]
+            NomesTodasChaves[0] = ["S4","S5","S6","S7","S8","S52","S53","S54","S55","S56","S57","S58","S72",
+                                   "S49", "S48", "S47", "S46"] #OK
+            #NomesTodasChaves[1] = ["S3","S4","S5","S6","S7","S8","S9","S10","S35","S36","S37",
+                          #"S38","S39","S40","S41","S42","S69"]
+            NomesTodasChaves[1] = ["S3","S4","S5","S6","S7","S8","S9","S10","S69","S42","S41","S40","S39",
+                                   "S38","S37","S36","S35"] #OK
+            NomesTodasChaves[2] = ["S11","S12","S13","S14","S71","S45","S44","S43","S69"] #OK
+            NomesTodasChaves[3] = ["S13","S14","S15","S16","S17","S18","S19","S20","S70"] #OK
+            #NomesTodasChaves[4] = ["S9","S10","S11","S12","S21","S22","S23","S24","S25","S26","S52","S53",
+                      #"S54","S55","S56","S57","S58","S59","S60","S61","S62","S63",
+                      #"S64","S73","S70"]
+            NomesTodasChaves[4] = ["S9","S10","S11","S12","S70","S21","S22","S23","S24","S25","S26",
+                                   "S73","S64","S63","S62","S61","S60","S59","S58","S57","S56","S55",
+                                   "S54","S53","S52"] #OK
             return NomesTodasChaves
         elif (N_Barras == 33):
             NomesTodasChaves = [0,0,0,0,0]
@@ -86,28 +95,30 @@ for i in range (N_Vezes):
             return NomesTodasChaves
         elif (N_Barras == 94):
             NomesTodasChaves = [0]*13
-            NomesTodasChaves[0] = ["S84","S54","S55","S96","S63","S62","S61","S85","S6",
-                                   "S7","S64"]
-            NomesTodasChaves[1] = ["S87","S72","S70","S69","S68","S67","S66","S65","S13",
-                                   "S88","S75","S74","S73","S76","S71"]
+            NomesTodasChaves[0] = ["S84","S55","S54","S96","S64","S63","S62","S61","S85","S7",
+                                   "S6"]
+            #NomesTodasChaves[1] = ["S87","S72","S70","S69","S68","S67","S66","S65","S13",
+                                   #"S88","S75","S74","S73","S76","S71"]
+            NomesTodasChaves[1] = ["S73", "S74", "S75","S76","S88","S13","S87","S72","S71",
+                                   "S70","S69","S68","S67","S66","S65"] #OK
             NomesTodasChaves[2] = ["S77","S78","S79","S80","S81","S82","S83","S91","S20",
-                                   "S19","S89","S14","S13","S88","S76","S75","S74","S73"]
+                                   "S19","S89","S14","S13","S88","S76","S75","S74","S73"] #OK
             NomesTodasChaves[3] = ["S65","S66","S67","S68","S69","S70","S71","S72","S87",
-                                   "S11","S12"]
+                                   "S12","S11"] #OK
             NomesTodasChaves[4] = ["S12","S14","S89","S18","S17","S90","S27","S28","S29",
-                                   "S93","S40","S95","S94","S86","S35","S36","S37","S38",
-                                   "S41","S42","S44","S45","S46"]
-            NomesTodasChaves[5] = ["S43","S44","S45","S46","S94","S30","S31","S32","S33",
-                                   "S34"]
-            NomesTodasChaves[6] = ["S41","S42","S95","S40","S39"]
+                                   "S93","S40","S95","S42","S41","S38","S37","S36","S35",
+                                   "S94","S46","S45","S44","S86"] #OK
+            NomesTodasChaves[5] = ["S43","S44","S45","S46","S94","S34","S33","S32","S31",
+                                   "S30"] #OK
+            NomesTodasChaves[6] = ["S41","S42","S95","S40","S39"] #OK
             NomesTodasChaves[7] = ["S33","S34","S35","S36","S37","S38","S39","S93","S29",
-                                   "S92"]
-            NomesTodasChaves[8] = ["S30","S31","S32","S92","S25","S26","S27","S28"]
-            NomesTodasChaves[9] = ["S25","S26","S90","S15","S16"]
-            NomesTodasChaves[10] = ["S47","S48","S49","S50","S51","S52","S53","S1","S2",
-                                    "S3","S4","S5","S84","S54","S55"]
-            NomesTodasChaves[11] = ["S1","S2","S3","S4","S5","S6","S7","S85","S56","S57",
-                                    "S58","S59","S60"]
+                                   "S92"] #OK
+            NomesTodasChaves[8] = ["S30","S31","S32","S92","S28","S27","S26","S25"] #OK 
+            NomesTodasChaves[9] = ["S25","S26","S90","S16","S15"] 
+            NomesTodasChaves[10] = ["S47","S48","S49","S50","S51","S52","S53","S54","S55",
+                                    "S84","S5","S4","S3","S2","S1"]
+            NomesTodasChaves[11] = ["S1","S2","S3","S4","S5","S6","S7","S85","S60","S59",
+                                    "S58","S57","S56"]
             NomesTodasChaves[12] = ["S11","S86","S43"]
             return NomesTodasChaves
         elif (N_Barras == 5):
@@ -563,6 +574,13 @@ for i in range (N_Vezes):
             elif (estado==0 or estado=='0'):
                 self.dssText.Command = "SwtControl."+chave+".action=open"
                 
+        def switch_elemento2(self, chave, estado):
+            self.dssSwtControl.Name = chave
+            if (estado==1) or (estado=='1'):
+                self.dssSwtControl.Action = 0
+            elif (estado==0) or (estado=='0'):
+                self.dssSwtControl.Action = 1
+                
         def matrixY(self):
             self.dssText.Command = "build Y"
             self.dssText.Command = "calcincmatrix"
@@ -669,6 +687,7 @@ for i in range (N_Vezes):
                 
         NomesTodasChaves = Ajuste_SistemaNBarras (N_Barras_Sistema) #obtém o vetor com todas as chaves de todas as malhas (incluindo as chaves repetidas)
         
+        
         if (Tipo_S_inicial == "DE"):
             if (N_Barras_Sistema == 33):
                 #S_ch = ['S7', 'S28', 'S10', 'S15', 'S13']
@@ -709,6 +728,7 @@ for i in range (N_Vezes):
         TensoesAntes = objeto.get_tensoes_DSS()
         AllBusNames = objeto.dssCircuit.AllBusNames
         #print ("len AllBusNames", len(AllBusNames))
+        #print ("num nodes", objeto.dssCircuit.NumNodes)
         BestFit = FitS
         BestS_ch = S_ch
         Iter = 0
@@ -757,7 +777,7 @@ for i in range (N_Vezes):
             fitorg, vizorg_ch = SortFitVizS_VizS_ListaMovimentos(FitVizS, N_Malhas, VizS_ch)
             
             #for j in range (len(fitorg)):
-                #print ("Vizinho", j,": ", VizS_ch[j], "Fit: ", FitVizS[j])
+            #    print ("Vizinho", j,": ", VizS_ch[j], "Fit: ", FitVizS[j])
                                 
             #PARTE DA ESCOLHA DO NOVO S:
             if (fitorg[0] < BestFit and BestS_ch!=vizorg_ch[0]): #função de aspiração: caso o melhor vizinho seja a melhor solução já encontrada mas estiver na LT, aceita mesmo assim 
